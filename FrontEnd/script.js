@@ -1,60 +1,84 @@
+"use strict";
+
+const url = "http://localhost:5678/api/works"; 
+
 const divFilters = document.getElementById("filters");
 const divProjects = document.getElementById("gallery");
 
 // Request from API
-try {
-    fetch("http://localhost:5678/api/works")
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Erreur de la requête HTTP");
-            }
-            return response.json();
-        })
-        .then(works => {
-            // Generate filters
-            const portfolioSection = new Set();
-            works.forEach(project => {
-                portfolioSection.add(project.category.name);
-            });
+fetch(url)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Erreur de la requête HTTP");
+    }
+    return response.json();
+  })
+  .then((works) => {
+    // Generate filters
+    const portfolioSection = new Set();
+    works.forEach((project) => {
+      portfolioSection.add(project.category.name);
+    });
 
-            const tableProjects = Array.from(portfolioSection);
-            let filterHTML = '<button id="Tous" class="button-filter">Tous</button>';
-            tableProjects.forEach(filter => {
-                filterHTML += `<button id="${filter}" class="button-filter">${filter}</button>`;
-            });
+    const tableProjects = Array.from(portfolioSection);
+    let filterHTML = '<button id="Tous" class="button-filter selected">Tous</button>';
+    tableProjects.forEach((filter) => {
+      const filterId = filter.replace(/\s+/g, '-'); // Ensure valid HTML IDs
+      filterHTML += `<button id="${filterId}" class="button-filter">${filter}</button>`;
+    });
 
-            divFilters.innerHTML = filterHTML;
+    divFilters.innerHTML = filterHTML;
 
-            // Add event listeners for filters
-            document.querySelectorAll('.button-filter').forEach(button => {
-                button.addEventListener('click', () => {
-                    displayWorks(works, button.id);
-                });
-            });
+    // Add event listeners for filters
+    document.querySelectorAll('.button-filter').forEach((button) => {
+      button.addEventListener('click', () => {
+        displayWorks(works, button.innerText);
 
-            // Display all works initially
-            displayWorks(works, 'Tous');
-        })
-        .catch(error => {
-            console.error("Erreur:", error);
+        // Remove 'selected' class of every buttons
+        document.querySelectorAll('.button-filter').forEach((btn) => {
+          btn.classList.remove('selected');
         });
-} catch (error) {
-    console.error("Erreur globale:", error);
-}
+        
+        // Add the class 'selected' for the selected button
+        button.classList.add('selected');
+      
+      });
+    });
+
+    // Display all works initially
+    displayWorks(works, 'Tous');
+  })
+  .catch((error) => {
+    console.error("Erreur:", error);
+  });
 
 // Function to display works based on filter
 function displayWorks(works, filter) {
-    divProjects.innerHTML = ''; // Clear existing images
+  divProjects.innerHTML = ''; // Clear existing images
 
-    const filteredWorks = filter === 'Tous' ? works : works.filter(work => work.category.name === filter);
+  const filteredWorks = filter === 'Tous' ? works : works.filter(work => work.category.name === filter);
 
-    filteredWorks.forEach(work => {
-        const workHTML = `
-            <div class="work-item">
-                <img src="${work.imageUrl}" alt="${work.title}">
-                <p>${work.title}</p>
-            </div>
-        `;
-        divProjects.innerHTML += workHTML;
-    });
+  // Loop on filtered works and create DOM work element 
+  filteredWorks.forEach(work => createWork(work));
+}
+
+/**
+ * Create a DOM Element for a work
+ * 
+ * @param {Object} work
+ */
+function createWork(work) {
+  let el_img = document.createElement('img');
+  el_img.src = work.imageUrl;
+  el_img.alt = work.title;
+
+  let el_title = document.createElement('p');
+  el_title.textContent = work.title;
+
+  let el_item = document.createElement('div');
+  el_item.classList.add('work-item');
+  el_item.append(el_img);
+  el_item.append(el_title);
+
+  divProjects.append(el_item);
 }

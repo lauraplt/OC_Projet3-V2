@@ -98,6 +98,9 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
+/** Introduction **/
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -110,16 +113,19 @@ li:hover {
 	margin: auto;
 	width: 80%;
 }
-
 #introduction article {
 	flex: 1
 }
 #introduction h2 {
 	margin-bottom: 1em;
 }
-
 #introduction p {
 	margin-bottom: 0.5em;
+}
+
+/** Projects **/
+#portfolio {
+	margin-top: 10em;
 }
 #portfolio h2 {
 	text-align: center;
@@ -132,18 +138,69 @@ li:hover {
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
 }
-
 .gallery img {
 	width: 100%;
-
 }
+#title {
+    text-align: center; 
+}
+#filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+	margin-bottom: 50px;
+	margin-top: 50px;
+}
+.button-filter {
+	font-size: 16px;
+	font-family: 'Syne';
+	color: #1D6154;
+    background-color: white;
+    border: 2px solid #1D6154;
+    border-radius: 60px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.button-filter:hover {
+    background-color: #1D6154;
+	color: white;
+}
+#gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.work-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 200px;
+	gap: 10px;
+    text-align: left;
+}
+.work-item img {
+    max-width: 100%;
+    height: auto;
+}
+.button-filter.selected {
+    background-color: #1D6154;
+    color: white; 
+}
+
+
+/** Contact **/ 
+
 #contact {
 	width: 50%;
 margin: auto;
 }
 #contact > * {
 	text-align: center;
-
 }
 #contact h2{
 	margin-bottom: 20px;
