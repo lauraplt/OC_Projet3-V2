@@ -243,3 +243,63 @@ footer nav ul {
 	margin: 2em
 }
 
+/* Styles pour le formulaire de connexion */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+	font-family: 'work sans';
+}
+
+#login {
+    width: 300px;
+    padding: 20px;
+    text-align: center;
+}
+
+#login h2 {
+    margin-bottom: 20px;
+    color: #1D6154;
+    font-family: 'Syne', sans-serif;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: left;
+    width: 100%;
+	margin-top: 10px;
+}
+
+input[type="text"], input[type="password"] {
+    margin-bottom: 15px;
+    padding: 10px;
+    width: 100%;
+	border: none;
+    box-sizing: border-box;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+	font-family: 'work-sans';
+	font-size: 14px;
+}
+
+button[type="submit"] {
+    padding: 10px;
+    background-color: #1D6154;
+    color: white;
+	border-radius: 60px;
+	border: #1D6154;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-weight: bold;
+    width: 50%;
+}
+
+
