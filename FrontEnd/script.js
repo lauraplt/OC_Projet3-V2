@@ -1,133 +1,113 @@
 "use strict";
 
-const url = "http://localhost:5678/api/works";
+// Const
+const node_filters = document.getElementById('filters');
+const node_gallery = document.getElementById('gallery');
 
-const divFilters = document.getElementById("filters");
-const divProjects = document.getElementById("gallery");
+// Variables
+const url_works = "http://localhost:5678/api/works";
 
-// Request from API
-fetch(url)
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("Erreur de la requête HTTP");
-    }
-    return response.json();
-  })
-  .then((works) => {
-    // Generate filters
-    const portfolioSection = new Set();
-    works.forEach((project) => {
-      portfolioSection.add(project.category.name);
-    });
+// Functions
 
-    const tableProjects = Array.from(portfolioSection);
-    let filterHTML =
-      '<button id="Tous" class="button-filter selected">Tous</button>';
-    tableProjects.forEach((filter) => {
-      const filterId = filter.replace(/\s+/g, "-"); // Ensure valid HTML IDs
-      filterHTML += `<button id="${filterId}" class="button-filter">${filter}</button>`;
-    });
-
-    divFilters.innerHTML = filterHTML;
-
-    // Add event listeners for filters
-    document.querySelectorAll(".button-filter").forEach((button) => {
-      button.addEventListener("click", () => {
-        displayWorks(works, button.innerText);
-
-        // Remove 'selected' class of every buttons
-        document.querySelectorAll(".button-filter").forEach((btn) => {
-          btn.classList.remove("selected");
-        });
-
-        // Add the class 'selected' for the selected button
-        button.classList.add("selected");
-      });
-    });
-
-    // Display all works initially
-    displayWorks(works, "Tous");
-  })
-  .catch((error) => {
-    console.error("Erreur:", error);
-  });
-
-// Function to display works based on filter
-function displayWorks(works, filter) {
-  divProjects.innerHTML = ""; // Clear existing images
-
-  const filteredWorks =
-    filter === "Tous"
-      ? works
-      : works.filter((work) => work.category.name === filter);
-
-  // Loop on filtered works and create DOM work element
-  filteredWorks.forEach((work) => createWork(work));
+// Call URL
+async function httpGet(url) {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
 }
 
-/**
- * Create a DOM Element for a work
- *
- * @param {Object} work
- */
+// Create a DOM Element for a work
 function createWork(work) {
-  let el_img = document.createElement("img");
+  let el_img = document.createElement('img');
   el_img.src = work.imageUrl;
   el_img.alt = work.title;
 
-  let el_title = document.createElement("p");
+  let el_title = document.createElement('figcaption');
   el_title.textContent = work.title;
 
-  let el_item = document.createElement("div");
+  let el_item = document.createElement("figure");
   el_item.classList.add("work-item");
   el_item.append(el_img);
   el_item.append(el_title);
 
-  divProjects.append(el_item);
+  node_gallery.append(el_item);
 }
 
-// Login Form Handling
-document.addEventListener('DOMContentLoaded', () => {
-  const loginForm = document.getElementById('loginForm');
+// Create a DOM Element for a filter
+function createFilter(filter, works) {
+  let el_filter = document.createElement('button');
+  el_filter.textContent = filter.name;
+  el_filter.classList.add("filter-item");
+  el_filter.dataset.filter = filter.id;
 
-  loginForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    const username = document.getElementById('username').value; 
-    const password = document.getElementById('password').value; 
-
-    fetch('http://localhost:5678/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ username, password })
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Nom d\'utilisateur ou mot de passe incorrect');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Login successful:', data);
-
-        const token = data.token;
-
-        if (!token) {
-          throw new Error('Token not found in the response');
-        }
-
-        localStorage.setItem('authToken', token);
-        // Redirect to homepage after storing token
-        window.location.href = 'index.html';
-      })
-      .catch((error) => {
-        console.error('Login error:', error);
-
-        const errorMessage = document.getElementById('error-message');
-        errorMessage.textContent = error.message;
-        errorMessage.style.display = 'block';
-      });
+  el_filter.addEventListener('click', () => {
+    // Remove active class from all filter buttons
+    document.querySelectorAll('.filter-item').forEach(button => button.classList.remove('active'));
+    // Add active class to the clicked button
+    el_filter.classList.add('active');
+    displayFilteredWorks(filter.id, works);
   });
-});
+
+  node_filters.append(el_filter);
+}
+
+// Display all works
+async function displayWorks() {
+  const works = await httpGet(url_works);
+  node_gallery.innerHTML = ''; // Clear previous works
+  works.forEach(work => createWork(work));
+  return works;
+}
+
+// Display filtered works
+function displayFilteredWorks(filterId, works) {
+  let filteredWorks = works;
+  if (filterId !== 'all') {
+    filteredWorks = works.filter(work => work.category.id === filterId);
+  }
+  node_gallery.innerHTML = ''; // Clear previous works
+  filteredWorks.forEach(work => createWork(work));
+}
+
+// Extract unique filters from works
+function extractFilters(works) {
+  const filtersMap = {};
+  works.forEach(work => {
+    if (!filtersMap[work.category.id]) {
+      filtersMap[work.category.id] = {
+        id: work.category.id,
+        name: work.category.name
+      };
+    }
+  });
+  return Object.values(filtersMap);
+}
+
+// Display filters
+function displayFilters(filters, works) {
+  // Add the "Tous" filter at the beginning
+  const allFilter = { id: 'all', name: 'Tous' };
+  createFilter(allFilter, works);
+
+  filters.forEach(filter => createFilter(filter, works));
+
+  // Select "Tous" filter by default
+  const allFilterButton = document.querySelector('.filter-item[data-filter="all"]');
+  allFilterButton.classList.add('active');
+  displayFilteredWorks('all', works);
+}
+
+// Initialize gallery and filters
+async function initialize() {
+  const works = await displayWorks();
+  const filters = extractFilters(works);
+  displayFilters(filters, works);
+}
+
+// Call the initialize function to display filters and works
+initialize();

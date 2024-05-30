@@ -124,9 +124,7 @@ li:hover {
 }
 
 /** Projects **/
-#portfolio {
-	margin-top: 10em;
-}
+
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
@@ -141,20 +139,19 @@ li:hover {
 .gallery img {
 	width: 100%;
 }
-#title {
-    text-align: center; 
-}
-#filters {
+
+.filters {
     display: flex;
     justify-content: center;
     gap: 10px;
-	margin-bottom: 50px;
-	margin-top: 50px;
+    margin-bottom: 50px;
+    margin-top: 50px;
 }
-.button-filter {
-	font-size: 16px;
-	font-family: 'Syne';
-	color: #1D6154;
+
+.filter-item {
+    font-size: 16px;
+    font-family: 'Syne', sans-serif;
+    color: #1D6154;
     background-color: white;
     border: 2px solid #1D6154;
     border-radius: 60px;
@@ -162,34 +159,15 @@ li:hover {
     cursor: pointer;
     transition: background-color 0.3s;
 }
-.button-filter:hover {
+
+.filter-item:hover {
     background-color: #1D6154;
-	color: white;
+    color: white;
 }
-#gallery {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    width: 100%;
-    margin-bottom: 20px;
-}
-.work-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 200px;
-	gap: 10px;
-    text-align: left;
-}
-.work-item img {
-    max-width: 100%;
-    height: auto;
-}
-.button-filter.selected {
+
+.filter-item.active {
     background-color: #1D6154;
-    color: white; 
+    color: white;
 }
 
 
