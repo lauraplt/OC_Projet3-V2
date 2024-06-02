@@ -1,15 +1,17 @@
 "use strict";
 
-// Const
-const node_filters = document.getElementById('filters');
-const node_gallery = document.getElementById('gallery');
-
-// Variables
+// Constantes
+const node_filters = document.querySelector('#filters');
+const node_gallery = document.querySelector('#gallery');
 const url_works = "http://localhost:5678/api/works";
+const url_login = "http://localhost:5678/api/users/login";
 
-// Functions
+// Check if the DOM elements exist
+if (!node_filters || !node_gallery) {
+  console.error("Required DOM elements not found!");
+}
 
-// Call URL
+// Call URL GET
 async function httpGet(url) {
   try {
     const response = await fetch(url);
@@ -21,7 +23,26 @@ async function httpGet(url) {
   }
 }
 
-// Create a DOM Element for a work
+// Call URL POST
+async function httpPost(url, data, headers) {
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(data)
+    });
+    const responseData = await response.json();
+    if (!response.ok) {
+      throw new Error(responseData.message || 'HTTP POST error');
+    }
+    return responseData;
+  } catch (e) {
+    console.error("HTTP POST error:", e);
+    throw e;
+  }
+}
+
+// DOM element for Works
 function createWork(work) {
   let el_img = document.createElement('img');
   el_img.src = work.imageUrl;
@@ -32,13 +53,13 @@ function createWork(work) {
 
   let el_item = document.createElement("figure");
   el_item.classList.add("work-item");
-  el_item.append(el_img);
-  el_item.append(el_title);
+  el_item.appendChild(el_img);
+  el_item.appendChild(el_title);
 
-  node_gallery.append(el_item);
+  node_gallery.appendChild(el_item);
 }
 
-// Create a DOM Element for a filter
+// DOM element for Filters
 function createFilter(filter, works) {
   let el_filter = document.createElement('button');
   el_filter.textContent = filter.name;
@@ -46,20 +67,22 @@ function createFilter(filter, works) {
   el_filter.dataset.filter = filter.id;
 
   el_filter.addEventListener('click', () => {
-    // Remove active class from all filter buttons
+    // Remove filters selection
     document.querySelectorAll('.filter-item').forEach(button => button.classList.remove('active'));
-    // Add active class to the clicked button
+    // Add selection for selected button
     el_filter.classList.add('active');
     displayFilteredWorks(filter.id, works);
   });
 
-  node_filters.append(el_filter);
+  node_filters.appendChild(el_filter);
 }
 
-// Display all works
+// Display Works
 async function displayWorks() {
   const works = await httpGet(url_works);
-  node_gallery.innerHTML = ''; // Clear previous works
+  while (node_gallery.firstChild) {
+    node_gallery.removeChild(node_gallery.firstChild); // Clear previous works
+  }
   works.forEach(work => createWork(work));
   return works;
 }
@@ -70,7 +93,9 @@ function displayFilteredWorks(filterId, works) {
   if (filterId !== 'all') {
     filteredWorks = works.filter(work => work.category.id === filterId);
   }
-  node_gallery.innerHTML = ''; // Clear previous works
+  while (node_gallery.firstChild) {
+    node_gallery.removeChild(node_gallery.firstChild); // Clear previous works
+  }
   filteredWorks.forEach(work => createWork(work));
 }
 
@@ -90,24 +115,65 @@ function extractFilters(works) {
 
 // Display filters
 function displayFilters(filters, works) {
-  // Add the "Tous" filter at the beginning
+  // Add "All" filter at the beginning
   const allFilter = { id: 'all', name: 'Tous' };
   createFilter(allFilter, works);
 
   filters.forEach(filter => createFilter(filter, works));
 
-  // Select "Tous" filter by default
+  // Select "All" filter by default
   const allFilterButton = document.querySelector('.filter-item[data-filter="all"]');
   allFilterButton.classList.add('active');
   displayFilteredWorks('all', works);
 }
 
 // Initialize gallery and filters
-async function initialize() {
+async function initializeGallery() {
   const works = await displayWorks();
   const filters = extractFilters(works);
   displayFilters(filters, works);
 }
 
-// Call the initialize function to display filters and works
-initialize();
+// Connect user
+async function loginUser(email, password) {
+  const data = { email, password };
+  const headers = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+  };
+  try {
+    const response = await httpPost(url_login, data, headers);
+    console.log('Login successful:', response);
+
+    // Save the token in local storage
+    localStorage.setItem('token', response.token);
+
+    // Redirect to homepage
+    window.location.href = 'index.html'; // Change this URL to your homepage
+  } catch (error) {
+    console.error('Login failed:', error);
+    alert('Login failed: ' + error.message);
+  }
+}
+
+// Initialize login form
+function initializeLoginForm() {
+  const loginForm = document.querySelector('#loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = event.target.username.value;
+      const password = event.target.password.value;
+      await loginUser(email, password);
+    });
+  }
+}
+
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+  if (node_filters && node_gallery) {
+    initializeGallery();
+  }
+  initializeLoginForm();
+});
+
