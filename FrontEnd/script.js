@@ -3,8 +3,13 @@
 // Constantes
 const node_filters = document.querySelector('#filters');
 const node_gallery = document.querySelector('#gallery');
+
 const url_works = "http://localhost:5678/api/works";
 const url_login = "http://localhost:5678/api/users/login";
+
+const validEmail = "sophie.bluel@test.tld";
+const validPassword = "S0phie";
+
 
 // Check if the DOM elements exist
 if (!node_filters || !node_gallery) {
@@ -134,6 +139,8 @@ async function initializeGallery() {
   displayFilters(filters, works);
 }
 
+// LOGIN //
+
 // Connect user
 async function loginUser(email, password) {
   const data = { email, password };
@@ -156,6 +163,12 @@ async function loginUser(email, password) {
   }
 }
 
+// Logout user
+function logoutUser() {
+  localStorage.removeItem('token');
+  window.location.href = 'index.html'; // Redirect to homepage after logout
+}
+
 // Initialize login form
 function initializeLoginForm() {
   const loginForm = document.querySelector('#loginForm');
@@ -169,11 +182,49 @@ function initializeLoginForm() {
   }
 }
 
+// Initialize logout button
+function initializeLogoutButton() {
+  const logoutNav = document.querySelector('#logoutNav');
+  if (logoutNav) {
+    logoutNav.addEventListener('click', (event) => {
+      event.preventDefault();
+      logoutUser();
+    });
+  }
+}
+
+// Display "Modifier la galerie" button
+function displayEditGalleryButton() {
+  const gallerySection = document.querySelector('#gallerySection');
+  const editButton = document.createElement('button');
+  editButton.id = 'editGallery';
+  editButton.textContent = 'Modifier';
+  editButton.onclick = () => {
+    // Logic to modify gallery
+    console.log('Modifier');
+  };
+  gallerySection.appendChild(editButton);
+}
+
+// Check login status
+function checkLoginStatus() {
+  const token = localStorage.getItem('token');
+  if (token) {
+    document.querySelector('#loginNav').style.display = 'none';
+    document.querySelector('#logoutNav').style.display = 'block';
+    displayEditGalleryButton();
+  } else {
+    document.querySelector('#loginNav').style.display = 'block';
+    document.querySelector('#logoutNav').style.display = 'none';
+  }
+}
+
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', () => {
   if (node_filters && node_gallery) {
     initializeGallery();
   }
   initializeLoginForm();
+  initializeLogoutButton();
+  checkLoginStatus();
 });
-
