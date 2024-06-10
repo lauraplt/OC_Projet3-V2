@@ -1,5 +1,7 @@
 "use strict";
 
+
+
 // Call URL GET
 async function httpGet(url) {
   try {
@@ -30,3 +32,22 @@ async function httpPost(url, data, headers) {
     throw e;
   }
 }
+
+
+// Utility function to check login status
+function checkLoginStatus() {
+  const loginNav = document.querySelector("#loginNav");
+  const logoutNav = document.querySelector("#logoutNav");
+  const token = sessionStorage.getItem("token");
+
+  if (token) {
+    loginNav.style.display = "none";
+    logoutNav.style.display = "inline";
+  } else {
+    loginNav.style.display = "inline";
+    logoutNav.style.display = "none";
+  }
+}
+
+// Call checkLoginStatus on DOMContentLoaded
+document.addEventListener("DOMContentLoaded", checkLoginStatus);
