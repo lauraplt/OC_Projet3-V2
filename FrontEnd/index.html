@@ -13,6 +13,7 @@
 	<script src="./assets/scripts/main.js" defer></script>
     <script src="./assets/scripts/login.js" defer></script>
     <script src="./assets/scripts/index.js" defer></script>
+	<script src="./assets/scripts/modal.js" defer></script>
 	
 </head>
 <body>
@@ -47,7 +48,16 @@
 
 		<div class="filters" id="filters"></div>
 	    <div class="gallery" id="gallery"></div>
-		
+		<button id="openModalBtn">Modifier</button>
+
+<!-- Structure de la modale -->
+<div id="editGalleryModal" class="modal">
+	<div class="modal-content">
+		<span class="close">&times;</span>
+		<h2>Galerie photo</h2>
+		<div id="modalGallery"></div>
+	</div>
+</div>
 		
 		<!-- 
 		<div class="gallery">
