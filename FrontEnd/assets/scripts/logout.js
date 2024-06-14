@@ -1,6 +1,5 @@
 "use strict";
 
-document.addEventListener("DOMContentLoaded", () => {
     // DOM elements
     const logoutNav = document.querySelector("#logoutNav");
     const loginNav = document.querySelector("#loginNav");
@@ -21,6 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
   
 
     // Add event listener to the logout link (outside handleLogout)
-    logoutNav.addEventListener("click", handleLogout);
-});
-
+    (() => {
+      logoutNav.addEventListener("click", handleLogout);
+})();

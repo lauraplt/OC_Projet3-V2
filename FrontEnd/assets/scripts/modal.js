@@ -4,27 +4,31 @@
  * Main function triggered when the DOM is fully loaded.
  * Initializes event listeners to open and close the modal, and load the gallery into the modal.
  */
-document.addEventListener("DOMContentLoaded", () => {
   // Selecting DOM elements
-  const openModalBtn = document.querySelector("#openModalBtn");
   const modal = document.querySelector("#editGalleryModal");
   const closeModalBtn = document.querySelector(".close");
   const modalGallery = document.querySelector("#modalGallery");
-  // Adding event listener to open the modal when the button is clicked
-  openModalBtn.addEventListener("click", () => {
-    modal.style.display = "block";
-    loadModalGallery();
-  });
-  // Adding event listener to close the modal when the close button is clicked
-  closeModalBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-  });
-  // Adding event listener to close the modal when the user clicks outside of it
-  window.addEventListener("click", (event) => {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
-  });
+
+  const store = sessionStorage;
+  const token = store.getItem('token');
+  
+function createEditBtn()
+{
+  const target = document.querySelector(".edit");
+  const btn = document.createElement('button');
+        btn.textContent = "Modifier";
+        btn.id = "openModalBtn"; 
+        btn.addEventListener("click", openModal);
+  target.append(btn);       
+}
+
+
+function openModal()
+{
+  modal.style.display = "block";
+  loadModalGallery();
+}
+
 
   /**
    * Asynchronous function to load the gallery into the modal.
@@ -32,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function loadModalGallery() {
     modalGallery.innerHTML = "";
-    const works = await httpGet(url_works);
 
     works.forEach((work) => {
       let el_img = document.createElement("img");
@@ -50,4 +53,21 @@ document.addEventListener("DOMContentLoaded", () => {
       modalGallery.appendChild(el_item);
     });
   }
-});
+
+  (() => {
+    // Adding event listener to close the modal when the close button is clicked
+    closeModalBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+    // Adding event listener to close the modal when the user clicks outside of it
+    window.addEventListener("click", (event) => {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    });
+
+    if (token)
+    {
+      createEditBtn();
+    }
+})();
