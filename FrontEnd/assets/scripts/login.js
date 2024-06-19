@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.querySelector("#loginForm");
     const loginNav = document.querySelector("#loginNav");
     const logoutNav = document.querySelector("#logoutNav");
+  
 
     /**
      * Handles the login form submission
@@ -42,3 +43,22 @@ document.addEventListener("DOMContentLoaded", () => {
         loginForm.addEventListener("submit", handleLogin);
     }
 });
+
+    /**
+     * Handles user logout
+     */
+    function handleLogout() {
+      console.log("Logout clicked"); // Vérifier si la fonction handleLogout est appelée
+      // Supprimer le token
+      sessionStorage.removeItem("token");
+  
+      // Afficher le lien de connexion et masquer le lien de déconnexion
+      loginNav.style.display = "inline";
+      logoutNav.style.display = "none";
+  }
+  
+
+    // Add event listener to the logout link (outside handleLogout)
+    (() => {
+      logoutNav.addEventListener("click", handleLogout);
+})();

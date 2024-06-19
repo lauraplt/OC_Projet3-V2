@@ -125,5 +125,3 @@ function resetActiveFilter(category) {
   //Display all Works
   showWorks(0);
 })();
-
-
