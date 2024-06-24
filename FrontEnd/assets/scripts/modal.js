@@ -94,7 +94,8 @@ async function deleteWork(workId) {
   token = sessionStorage.getItem('token'); // Update token if necessary
 
   if (token) {
-    createEditBtn(); // Ajoute le bouton "Modifier"
-    // Ne pas appeler openModal() ici pour éviter l'affichage automatique de la modale
+    createEditBtn(); 
+
   }
 })();
+
