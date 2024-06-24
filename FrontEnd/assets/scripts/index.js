@@ -3,6 +3,7 @@
 // DOM elements for filters and the gallery
 const node_filters = document.querySelector("#filters");
 const node_gallery = document.querySelector("#gallery");
+const node_myProjectsTitle = document.querySelector("#myProjectsTitle");
 
 // API URLs to fetch works and categories
 const url_works = "http://localhost:5678/api/works";
@@ -17,7 +18,6 @@ let works = [];
  * Creates and displays a work item in the gallery
  * @param {Object} work - The work object to display
  */
-
 function createWork(work) {
   let el_img = document.createElement("img");
   el_img.src = work.imageUrl;
@@ -38,7 +38,6 @@ function createWork(work) {
  * Displays works filtered by category
  * @param {number} category - The ID of the category to filter by
  */
-
 function showWorks(category) {
   // Reset Gallery
   resetGallery();
@@ -46,9 +45,8 @@ function showWorks(category) {
   // Display all works if the category is 0 (All)
   if (category == 0) {
     works.forEach((work) => createWork(work));
-  }
-  // Filter and display works by category
-  else {
+  } else {
+    // Filter and display works by category
     works.forEach((work) => {
       if (work.categoryId == category) {
         createWork(work);
@@ -122,6 +120,87 @@ function resetActiveFilter(category) {
   // Create a filter button for each category
   categories.forEach((category) => createFilter(category));
 
-  //Display all Works
+  // Display all Works
   showWorks(0);
+
+  // Initialize login status check
+  checkLoginStatus();
+})();
+
+/**
+ * Utility function to make GET requests
+ * @param {string} url - The URL to make the request to
+ * @returns {Promise<any>} - The response data
+ */
+async function httpGet(url) {
+  const response = await fetch(url);
+  return response.json();
+}
+
+// ------------------ Modal and Edit Button Management ----------------------------
+
+/**
+ * Utility function to check login status and update UI accordingly
+ */
+function checkLoginStatus() {
+  const loginNav = document.querySelector("#loginNav");
+  const logoutNav = document.querySelector("#logoutNav");
+  const token = sessionStorage.getItem("token");
+
+  if (token) {
+    loginNav.style.display = "none";
+    logoutNav.style.display = "inline";
+    document.querySelector(".filters").classList.add("hidden"); // Hide filters
+    addModifyButton(); // Add the CTA button
+  } else {
+    loginNav.style.display = "inline";
+    logoutNav.style.display = "none";
+    document.querySelector(".filters").classList.remove("hidden"); // Show filters
+    removeModifyButton(); // Remove the CTA button
+  }
+}
+
+/**
+ * Adds the modify button
+ */
+function addModifyButton() {
+  let modifyButton = document.querySelector("#openModalBtn");
+  if (!modifyButton) {
+    modifyButton = document.createElement("button");
+    modifyButton.textContent = "Modifier";
+    modifyButton.classList.add("cta-modifier");
+    modifyButton.id = "openModalBtn";
+
+    // Create and add icon element
+    let icon = document.createElement("i");
+    icon.classList.add("fas", "fa-pen-to-square");
+    modifyButton.appendChild(icon);
+
+    modifyButton.addEventListener("click", openModal);
+    node_myProjectsTitle.insertAdjacentElement("afterend", modifyButton);
+  }
+}
+
+/**
+ * Removes the modify button
+ */
+function removeModifyButton() {
+  const modifyButton = document.querySelector("#openModalBtn");
+  if (modifyButton) {
+    modifyButton.remove();
+  }
+}
+
+(() => {
+  const closeModalBtn = modal.querySelector(".close");
+
+  closeModalBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+  });
+
+  const token = sessionStorage.getItem('token');
+
+  if (token) {
+      createEditBtn();
+  }
 })();
