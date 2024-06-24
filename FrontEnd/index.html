@@ -134,14 +134,26 @@
 
 
 
-<!-- Structure de la modale -->
+<!-- Modal HTML Structure -->
 <div id="editGalleryModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Galerie photo</h2>
-        <div id="modalGallery"></div>
-    </div>
-</div>
+	<span class="close">&times;</span>
+	<div id="modalGallery">
+	  <!-- Gallery content will be dynamically loaded here -->
+	</div>
+	<div id="addImageForm" style="display: none;">
+	  <!-- Form content for adding a new image -->
+	  <input type="file" id="imageUpload" />
+	  <input type="text" id="imageTitle" placeholder="Titre" />
+	  <select id="imageCategory">
+		<!-- Categories options will be dynamically loaded here -->
+	  </select>
+	  <button id="validateImageBtn">Valider</button>
+	  <button id="backToGalleryBtn">Retour à la galerie</button>
+	</div>
+	<button id="addImageBtn">Ajouter une photo</button>
+  </div>
+  
+
 
 
 </body>

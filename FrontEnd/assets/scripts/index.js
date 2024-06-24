@@ -109,7 +109,7 @@ function resetActiveFilter(category) {
 // ------------------ Init ----------------------------
 
 /**
- * Self-invoking function to initialize filters and display all works
+ * function to initialize filters and display all works
  */
 (async function () {
   const categories = await httpGet(url_categories);
@@ -191,16 +191,31 @@ function removeModifyButton() {
   }
 }
 
-(() => {
-  const closeModalBtn = modal.querySelector(".close");
+/**
+ * Opens the modal
+ */
+function openModal() {
+  const modal = document.querySelector("#editGalleryModal");
+  modal.style.display = "block";
+  loadModalGallery(); // Load modal gallery when modal is opened
+  document.addEventListener('keydown', handleEscapeKey); // Add event listener for Escape key
+}
 
-  closeModalBtn.addEventListener("click", () => {
-      modal.style.display = "none";
-  });
+/**
+ * Closes the modal
+ */
+function closeModal() {
+  const modal = document.querySelector("#editGalleryModal");
+  modal.style.display = "none";
+  document.removeEventListener('keydown', handleEscapeKey); // Remove event listener for Escape key
+}
 
-  const token = sessionStorage.getItem('token');
-
-  if (token) {
-      createEditBtn();
+/**
+ * close the modal
+ * @param {KeyboardEvent} event
+ */
+function handleEscapeKey(event) {
+  if (event.key === 'Escape') {
+    closeModal();
   }
-})();
+}
