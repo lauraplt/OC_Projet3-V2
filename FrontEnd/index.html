@@ -45,11 +45,6 @@
 	
 	<section id="portfolio">
 		<h2 id="myProjectsTitle">Mes projets</h2> 	<div class="edit"></div>
-	
-		
-	
-		  
-
 		<div class="filters" id="filters"></div>
 	    <div class="gallery" id="gallery"></div>
 	
@@ -122,6 +117,31 @@
 			<input type="submit" value="Envoyer">
 		</form>
 	</section>
+
+	<!-- Modal Structure -->
+<div id="editModal" class="modal">
+	<div class="modal-content">
+	  <span class="close">&times;</span>
+	  <div id="modalGallery" class="gallery"></div>
+	  <button id="addPhotoBtn">Ajouter une photo</button>
+
+	  <div id="addPhotoForm" style="display: none;">
+		<div class="back-arrow">&larr;</div> 
+		<h2>Ajout une photo</h2>
+		<form id="uploadForm">
+		  <input type="file" id="photoFile" name="photoFile" accept="image/*" required>
+		  <input type="text" id="photoTitle" name="photoTitle" placeholder="Titre" required>
+		  <input type="text" id="photoCategory" name="photoCategory" placeholder="Catégorie" required>
+		  <button type="submit">Valider</button>
+		</form>
+	  </div>
+	</div>
+  </div>
+  
+	</div>
+  </div>
+
+  
 </main>
 
 <footer>
@@ -133,28 +153,3 @@
 </footer>
 
 
-
-<!-- Modal HTML Structure -->
-<div id="editGalleryModal" class="modal">
-	<span class="close">&times;</span>
-	<div id="modalGallery">
-	  <!-- Gallery content will be dynamically loaded here -->
-	</div>
-	<div id="addImageForm" style="display: none;">
-	  <!-- Form content for adding a new image -->
-	  <input type="file" id="imageUpload" />
-	  <input type="text" id="imageTitle" placeholder="Titre" />
-	  <select id="imageCategory">
-		<!-- Categories options will be dynamically loaded here -->
-	  </select>
-	  <button id="validateImageBtn">Valider</button>
-	  <button id="backToGalleryBtn">Retour à la galerie</button>
-	</div>
-	<button id="addImageBtn">Ajouter une photo</button>
-  </div>
-  
-
-
-
-</body>
-</html>

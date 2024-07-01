@@ -1,144 +1,149 @@
 "use strict";
 
-// DOM elements for the modal
-const modalGallery = document.querySelector("#modalGallery");
-const closeModalBtn = document.querySelector("#editGalleryModal .close");
+document.addEventListener("DOMContentLoaded", () => {
+    const editModal = document.querySelector("#editModal");
+    const modalGallery = document.querySelector("#modalGallery");
+    const closeModalBtn = document.querySelector(".close");
+    const addPhotoBtn = document.querySelector("#addPhotoBtn");
+    const addPhotoForm = document.querySelector("#addPhotoForm");
+    const uploadForm = document.querySelector("#uploadForm");
+    const backArrow = document.querySelector(".back-arrow");
 
-const store = sessionStorage;
-let token = store.getItem('token'); // Change 'const' to 'let' if token might change
-
-/**
- * Loads and displays the gallery in the modal
- */
-async function loadModalGallery() {
-  try {
-    const works = await fetchWorks();
-    modalGallery.innerHTML = "";
-
-    works.forEach((work) => {
-      let el_img = document.createElement("img");
-      el_img.src = work.imageUrl;
-      el_img.alt = work.title;
-      el_img.classList.add("modal-thumbnail");
-
-      let deleteIcon = document.createElement("span");
-      deleteIcon.textContent = "🗑️";
-      deleteIcon.classList.add("delete-icon");
-      deleteIcon.addEventListener("click", () => deleteWork(work.id));
-
-      let el_container = document.createElement("div");
-      el_container.classList.add("modal-item");
-      el_container.appendChild(el_img);
-      el_container.appendChild(deleteIcon);
-
-      modalGallery.appendChild(el_container);
-    });
-  } catch (e) {
-    console.error("Error loading modal gallery:", e);
-  }
-}
-
-/**
- * Fetches works from the server
- * @returns {Promise<Array>} - Array of works
- */
-async function fetchWorks() {
-  try {
-    const response = await fetch('http://localhost:5678/api/works');
-    if (!response.ok) {
-      throw new Error('Failed to fetch works');
+    /**
+     * Open the modal to show the edit gallery
+     */
+    function openModal() {
+        editModal.style.display = "block";
+        showGallery();
     }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching works:', error.message);
-    return [];
-  }
-}
 
-/**
- * Deletes a work item by its ID
- * @param {number} workId - The ID of the work item to delete
- */
-async function deleteWork(workId) {
-  try {
-    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (response.ok) {
-      await loadModalGallery(); // Reload modal gallery after deletion
-    } else {
-      console.error("Failed to delete work");
+    /**
+     * Show the gallery section and hide the add photo form
+     */
+    function showGallery() {
+        modalGallery.style.display = "flex";
+        addPhotoForm.style.display = "none";
+        addPhotoBtn.style.display = "block";
+        backArrow.style.display = "none";
+        showModalGallery();
     }
-  } catch (e) {
-    console.error("Error:", e);
-  }
-}
 
-/**
- * Validates and adds a new image to the gallery
- */
-async function validateImage() {
-  const image = document.querySelector("#imageUpload").files[0];
-  const title = document.querySelector("#imageTitle").value;
-  const category = document.querySelector("#imageCategory").value;
+    /**
+     * Show the add photo form and hide the gallery section
+     */
+    function showAddPhotoForm() {
+        modalGallery.style.display = "none";
+        addPhotoForm.style.display = "block";
+        addPhotoBtn.style.display = "none";
+        backArrow.style.display = "block";
+    }
 
-  if (!image || !title || !category) {
-    alert("Veuillez remplir tous les champs.");
-    return;
-  }
+    /**
+     * Showthe modal gallery with works (without titles)
+     */
+    async function showModalGallery() {
+        try {
+            const works = await httpGet("http://localhost:5678/api/works");
+            modalGallery.innerHTML = "";
+            works.forEach(work => {
+                let el_img = document.createElement("img");
+                el_img.src = work.imageUrl;
+                el_img.alt = work.title;
 
-  const formData = new FormData();
-  formData.append("image", image);
-  formData.append("title", title);
-  formData.append("category", category);
+                let el_item = document.createElement("figure");
+                el_item.classList.add("work-item");
+                el_item.appendChild(el_img);
 
-  try {
-    const response = await fetch(`http://localhost:5678/api/works`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      body: formData
+                modalGallery.appendChild(el_item);
+            });
+        } catch (error) {
+            console.error("Error fetching works:", error);
+            alert("Erreur lors du chargement de la galerie");
+        }
+    }
+
+    /**
+     * Close the modal
+     */
+    function closeModal() {
+        editModal.style.display = "none";
+    }
+
+    closeModalBtn.addEventListener("click", closeModal);
+
+    window.addEventListener("click", function (event) {
+        if (event.target === editModal) {
+            closeModal();
+        }
     });
 
-    if (response.ok) {
-      await loadModalGallery(); // Reload modal gallery after adding a new image
-      backToGallery();
-    } else {
-      console.error("Failed to add work");
+    // Open modal for modify button
+    const modifyButton = document.querySelector(".modify-button");
+    if (modifyButton) {
+        modifyButton.addEventListener("click", openModal);
     }
-  } catch (e) {
-    console.error("Error:", e);
-  }
-}
 
-/**
- * Shows the form to add a new image
- */
-function showAddImageForm() {
-  document.querySelector("#addImageForm").style.display = "block";
-  modalGallery.style.display = "none";
-  document.querySelector("#addImageBtn").style.display = "none";
-}
+    // Show the add photo form
+    addPhotoBtn.addEventListener("click", showAddPhotoForm);
 
-/**
- * Hides the form to add a new image and shows the gallery
- */
-function backToGallery() {
-  document.querySelector("#addImageForm").style.display = "none";
-  modalGallery.style.display = "block";
-  document.querySelector("#addImageBtn").style.display = "block";
-}
+    // Submit the form
+    uploadForm.addEventListener("submit", event => {
+        event.preventDefault();
 
-// Event listeners
-document.querySelector("#addImageBtn").addEventListener("click", showAddImageForm);
-document.querySelector("#backToGalleryBtn").addEventListener("click", backToGallery);
-document.querySelector("#validateImageBtn").addEventListener("click", validateImage);
-closeModalBtn.addEventListener("click", () => {
-  document.querySelector("#editGalleryModal").style.display = "none";
+        const formData = new FormData(uploadForm);
+        const url_addWork = "http://localhost:5678/api/works";
+        const token = sessionStorage.getItem("token");
+
+        fetch(url_addWork, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Erreur lors de l'ajout de la photo");
+            }
+            return response.json();
+        })
+        .then(newWork => {
+            works.push(newWork);
+            showGallery(); // Refresh the gallery after adding a new work
+        })
+        .catch(error => {
+            console.error("Erreur:", error);
+            alert("Erreur lors de l'ajout de la photo");
+        });
+    });
+
+    // Navigate back to the gallery when clicking the back arrow
+    backArrow.addEventListener("click", showGallery);
+
+    // Utility function to perform GET requests
+    async function httpGet(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error("HTTP GET error");
+        }
+        return await response.json();
+    }
+
+    // Call checkLoginStatus on DOMContentLoaded (from existing script)
+    checkLoginStatus();
 });
 
+// Utility function to check login status (from existing script)
+function checkLoginStatus() {
+    const loginNav = document.querySelector("#loginNav");
+    const logoutNav = document.querySelector("#logoutNav");
+    const token = sessionStorage.getItem("token");
+
+    if (token) {
+        loginNav.style.display = "none";
+        logoutNav.style.display = "inline";
+    } else {
+        loginNav.style.display = "inline";
+        logoutNav.style.display = "none";
+    }
+}

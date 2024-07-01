@@ -92,16 +92,16 @@ function applyFilter(event) {
 }
 
 /**
- * Resets the active filter state by adding an 'active' class to the selected filter button
+ * Resets the active filter state by adding an 'is-active' class to the selected filter button
  * @param {number} category - The ID of the selected category
  */
 function resetActiveFilter(category) {
   document
     .querySelectorAll(".filter-item")
-    .forEach((button) => button.classList.remove("active"));
+    .forEach((button) => button.classList.remove("is-active"));
   document.querySelectorAll(".filter-item").forEach((button) => {
     if (button.dataset.filter == category) {
-      button.classList.add("active");
+      button.classList.add("is-active");
     }
   });
 }
@@ -120,8 +120,9 @@ function resetActiveFilter(category) {
   // Create a filter button for each category
   categories.forEach((category) => createFilter(category));
 
-  // Display all Works
+  // Display all Works and set "Tous" as active filter by default
   showWorks(0);
+  resetActiveFilter(0);
 
   // Initialize login status check
   checkLoginStatus();
@@ -137,10 +138,8 @@ async function httpGet(url) {
   return response.json();
 }
 
-// ------------------ Modal and Edit Button Management ----------------------------
-
 /**
- * Utility function to check login status and update UI accordingly
+ * Utility function to check login status
  */
 function checkLoginStatus() {
   const loginNav = document.querySelector("#loginNav");
@@ -150,72 +149,29 @@ function checkLoginStatus() {
   if (token) {
     loginNav.style.display = "none";
     logoutNav.style.display = "inline";
-    document.querySelector(".filters").classList.add("hidden"); // Hide filters
-    addModifyButton(); // Add the CTA button
+
+    // Hide filters when logged in
+    node_filters.style.display = "none";
+
+    // Add "modifier" button next to "mes projets" title if not already added
+    if (!document.querySelector(".modify-button")) {
+      let modifyButton = document.createElement("button");
+      modifyButton.textContent = "Modifier";
+      modifyButton.classList.add("modify-button");
+      node_myProjectsTitle.appendChild(modifyButton);
+    }
   } else {
     loginNav.style.display = "inline";
     logoutNav.style.display = "none";
-    document.querySelector(".filters").classList.remove("hidden"); // Show filters
-    removeModifyButton(); // Remove the CTA button
+
+  
+    // Remove "modifier" button if it exists
+    const modifyButton = document.querySelector(".modify-button");
+    if (modifyButton) {
+      modifyButton.remove();
+    }
   }
 }
 
-/**
- * Adds the modify button
- */
-function addModifyButton() {
-  let modifyButton = document.querySelector("#openModalBtn");
-  if (!modifyButton) {
-    modifyButton = document.createElement("button");
-    modifyButton.textContent = "Modifier";
-    modifyButton.classList.add("cta-modifier");
-    modifyButton.id = "openModalBtn";
-
-    // Create and add icon element
-    let icon = document.createElement("i");
-    icon.classList.add("fas", "fa-pen-to-square");
-    modifyButton.appendChild(icon);
-
-    modifyButton.addEventListener("click", openModal);
-    node_myProjectsTitle.insertAdjacentElement("afterend", modifyButton);
-  }
-}
-
-/**
- * Removes the modify button
- */
-function removeModifyButton() {
-  const modifyButton = document.querySelector("#openModalBtn");
-  if (modifyButton) {
-    modifyButton.remove();
-  }
-}
-
-/**
- * Opens the modal
- */
-function openModal() {
-  const modal = document.querySelector("#editGalleryModal");
-  modal.style.display = "block";
-  loadModalGallery(); // Load modal gallery when modal is opened
-  document.addEventListener('keydown', handleEscapeKey); // Add event listener for Escape key
-}
-
-/**
- * Closes the modal
- */
-function closeModal() {
-  const modal = document.querySelector("#editGalleryModal");
-  modal.style.display = "none";
-  document.removeEventListener('keydown', handleEscapeKey); // Remove event listener for Escape key
-}
-
-/**
- * close the modal
- * @param {KeyboardEvent} event
- */
-function handleEscapeKey(event) {
-  if (event.key === 'Escape') {
-    closeModal();
-  }
-}
+// Call checkLoginStatus on DOMContentLoaded
+document.addEventListener("DOMContentLoaded", checkLoginStatus);
