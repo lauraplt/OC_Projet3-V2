@@ -1,7 +1,6 @@
 "use strict";
 
 
-
 // Call URL GET
 async function httpGet(url) {
   try {
@@ -34,6 +33,7 @@ async function httpPost(url, data, headers) {
 }
 
 
+
 // Utility function to check login status
 function checkLoginStatus() {
   const loginNav = document.querySelector("#loginNav");
@@ -51,3 +51,4 @@ function checkLoginStatus() {
 
 // Call checkLoginStatus on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", checkLoginStatus);
+

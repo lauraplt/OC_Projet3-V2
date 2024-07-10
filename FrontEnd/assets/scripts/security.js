@@ -8,6 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginNav = document.querySelector("#loginNav");
     const logoutNav = document.querySelector("#logoutNav");
 
+    if (!loginNav || !logoutNav) {
+        console.error("LoginNav or logoutNav element not found.");
+        return;
+    }
+
     /**
      * Handles the login form submission
      * @param {Event} event - The form submit event
@@ -26,11 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
             sessionStorage.setItem("token", data.token);
 
             // Display logout link and hide login link
-            loginNav.style.display = "none";
-            logoutNav.style.display = "inline";
+            loginNav.classList.add("hide");
+            logoutNav.classList.remove("hide");
 
             // Redirect to the homepage
-            window.location.href = "index.html";
+            window.location.href = "main.html";
         } catch (error) {
             alert(`Erreur: ${error.message}`);
         }
@@ -43,8 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
         sessionStorage.removeItem("token");
 
         // Display login link and hide logout link
-        loginNav.style.display = "inline";
-        logoutNav.style.display = "none";
+        loginNav.classList.remove("hide");
+        logoutNav.classList.add("hide");
 
         // Refresh the page to apply changes
         window.location.reload();
@@ -59,18 +64,28 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutNav.addEventListener("click", handleLogout);
 });
 
-/**
- * Utility function for HTTP POST requests
- * @param {string} url - The URL to send the request to
- * @param {Object} body - The body of the request
- * @param {Object} headers - The headers for the request
- * @returns {Promise<Object>} - The response data
- */
-async function httpPost(url, body, headers) {
-    const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: headers,
-    });
-    return response.json();
+/* Checks the login status of the user and updates the UI elements accordingly.
+*/
+function checkLoginStatus() {
+    const loginNav = document.querySelector("#loginNav");
+    const logoutNav = document.querySelector("#logoutNav");
+    const token = sessionStorage.getItem("token");
+
+    if (loginNav && logoutNav) {
+        if (token) {
+            loginNav.classList.add("hide");
+            logoutNav.classList.remove("hide");
+            modifyButton.classList.remove("hide");
+            node_filters.classList.add("hide");
+        } else {
+            loginNav.classList.remove("hide");
+            logoutNav.classList.add("hide");
+            modifyButton.classList.add("hide");
+            node_filters.classList.remove("hide");
+        }
+    } else {
+        console.error("LoginNav or logoutNav element not found.");
+    }
 }
+
+document.addEventListener("DOMContentLoaded", checkLoginStatus);

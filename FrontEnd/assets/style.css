@@ -147,11 +147,11 @@ body {
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	margin: 50px 0;
 }
 
 section {
-	margin: 50px 0
+	margin: 50px 0;
 }
 
 h1 {
@@ -160,28 +160,26 @@ h1 {
 	font-family: 'Syne';
 	font-size: 22px;
 	font-weight: 800;
-	color: #B1663C
+	color: #B1663C;
 }
 
 h1>span {
 	font-family: 'Work Sans';
 	font-size: 10px;
 	letter-spacing: 0.1em;
-	;
 }
 
 h2 {
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
-	color: #1D6154
+	color: #1D6154;
 }
 
 nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
-
 }
 
 nav li {
@@ -216,15 +214,13 @@ footer nav {
 	margin-right: 0;
 }
 
-
-
 #introduction {
 	display: flex;
 	align-items: center;
 }
 
 #introduction figure {
-	flex: 1
+	flex: 1;
 }
 
 #introduction img {
@@ -234,7 +230,7 @@ footer nav {
 }
 
 #introduction article {
-	flex: 1
+	flex: 1;
 }
 
 #introduction h2 {
@@ -250,17 +246,22 @@ footer nav {
 	margin-bottom: 1em;
 }
 
+#portfolio {
+	width: 100%;
+	max-width: 1140px; 
+	margin: 0 auto; 
+	text-align: center; 
+}
 
-/*filters Buttons*/
-
+/*filters*/
 .filters {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 10px;
 	padding: 50px;
+	margin: 0 auto;
 }
-
 
 button {
 	height: 36px;
@@ -300,10 +301,10 @@ button:hover {
 .gallery img {
 	width: 100%;
 	height: 100%;
-  	object-fit: cover;
+	object-fit: cover;
 }
 
-.gallery figcaption{
+.gallery figcaption {
 	margin-top: 10px;
 }
 
@@ -315,7 +316,6 @@ button:hover {
 
 #contact>* {
 	text-align: center;
-
 }
 
 #contact h2 {
@@ -359,7 +359,7 @@ input[type="submit"] {
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
 }
 
 #contact input[type="submit"]:hover {
@@ -370,7 +370,6 @@ footer nav ul {
 }
 
 /*Log in page*/
-
 #login {
 	margin-bottom: auto;
 	padding: 200px 0;
@@ -386,7 +385,7 @@ footer nav ul {
 	font-size: 30px;
 }
 
-#login form {
+#loginForm {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -438,11 +437,8 @@ footer nav ul {
 	text-align: center;
 }
 
-
-  
 /*modal*/
 
-/* Modal container */
 .modal {
 	display: none;
 	position: fixed;
@@ -454,10 +450,10 @@ footer nav ul {
 	overflow: auto;
 	background-color: rgb(0, 0, 0);
 	background-color: rgba(0, 0, 0, 0.4);
-  }
-  
-  /* Modal content */
-  .modal-content {
+}
+
+
+.modal-content {
 	background-color: #fefefe;
 	margin: 15% auto;
 	padding: 20px;
@@ -465,89 +461,67 @@ footer nav ul {
 	width: 80%;
 	max-width: 600px;
 	border-radius: 4px;
-  }
-  
-  /* Close button */
-  .close {
+}
+
+
+.close {
 	color: #aaa;
 	float: right;
 	font-size: 28px;
 	font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
+}
+
+.close:hover,
+.close:focus {
 	color: black;
 	text-decoration: none;
 	cursor: pointer;
-  }
-  
-  /* Modal Gallery Styles */
-  /* Modal container */
-.modal {
-	display: none;
-	position: fixed;
-	z-index: 1;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	background-color: rgb(0, 0, 0);
-	background-color: rgba(0, 0, 0, 0.4);
-  }
-  
-  /* Modal content */
-  .modal-content {
-	background-color: #fefefe;
-	margin: 5% auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 80%;
-	max-width: 600px;
-	text-align: center;
-  }
-  
-  /* Close button */
-  .close {
-	color: #aaa;
-	float: right;
-	font-size: 28px;
-	font-weight: bold;
-  }
-  
-  .close:hover,
-  .close:focus {
-	color: black;
-	text-decoration: none;
-	cursor: pointer;
-  }
-  
-  /* Modal Gallery Styles */
-  #modalGallery {
+}
+
+
+#modalGallery {
+	border-bottom: 1px solid #b3b3b3;
+	margin-top: 50px;
+	margin-bottom: 10px;
+	padding-bottom: 30px;
 	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 10px; 
-	margin: 20px 0;
-  }
-  
-  #modalGallery .work-item {
-	position: relative;
-	width: 76.86px;
-	height: 102.57px;
-	opacity: 1; 
-  }
-  
-  #modalGallery .work-item img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 4px; 
-  }
-  
-  /* Styles for the add photo button */
-  #addPhotoBtn {
+	flex-flow: row wrap;
+	gap: 11px;
+	width: 80%;
+}
+
+#modalGallery .work-item {
+    position: relative;
+    width: 76.86px;
+    height: 102.57px;
+    opacity: 1;
+}
+
+#modalGallery .work-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.delete-icon {
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	margin-left: -20px;
+	margin-top: 10px;
+	cursor: pointer;
+	font-size: 10px;
+	text-align: center;
+	color: #ffffff;
+}
+
+.delete-icon:hover {
+	background-color: #333333;
+}
+
+
+#addPhotoBtn {
 	display: inline-block;
 	margin-top: 20px;
 	padding: 10px 20px;
@@ -557,42 +531,133 @@ footer nav ul {
 	color: #fff;
 	font-size: 16px;
 	cursor: pointer;
-  }
-  
-  #addPhotoBtn:hover {
+}
+
+#addPhotoBtn:hover {
 	background-color: #145440;
-  }
-  
-  /* Form styling */
-#addPhotoForm h2 {
+}
+
+
+#uploadForm h2 {
 	margin-bottom: 20px;
-  }
-  
-  #addPhotoForm input[type="file"],
-  #addPhotoForm input[type="text"],
-  #addPhotoForm button {
-	display: block;
-	margin: 10px auto;
-	width: calc(100% - 40px);
-	max-width: 400px;
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-  }
-  
-  #addPhotoForm button {
+}
+#uploadForm {
+	width: 420px;
+	padding: 36px 0 30px 0;
+	display: flex;
+	flex-flow: column;
+}
+
+#uploadForm input[type="file"],
+#uploadForm input[type="text"],
+#uploadForm button {
+	background: #ffffff;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	height: 51px;
+	border: none;
+	padding:  0 28px 0 16px;
+	font-family: 'Work Sans';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 16px;
+	color: #444444;
+	margin-top: 10px;
+}
+#image {
+	display: none;
+}
+
+.upload-photo-box{
+	background: #e8f1f7;
+	border-radius: 3px;
+	height: 180px;
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	margin-bottom: 20px;
+}
+.upload-photo-box i{
+	color: #B9C5CC;
+	font-size: 4.7em;
+	margin-top: -10px;
+}
+
+.upload-photo-box p{
+	font-size: 12px;
+}
+
+
+
+#validate-button{
+	background: #a7a7a7;
+	border-radius: 60px;
+	font-family: "Syne";
+	font-style: normal;
+	font-weight: 700;
+	font-size: 14px;
+	line-height: 17px;
+	width: 237px;
+	height: 36px;
+	border: none;
+	color: #ffffff;
+	margin: 25px auto 0px;
+}
+
+#addPhotoForm button {
 	background-color: #1d6154;
 	color: white;
 	cursor: pointer;
-  }
-  
-  #addPhotoForm button:hover {
-	background-color: #145440;
-  }
+}
 
-  .back-arrow {
-    font-size: 24px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    color: #1d6154; 
+#addPhotoForm button:hover {
+	background-color: #145440;
+}
+
+
+.back-arrow {
+	font-size: 24px;
+	cursor: pointer;
+	margin-bottom: 10px;
+	color: #1d6154;
+}
+
+.header-container {
+	display: flex;
+	justify-content: center; 
+	margin-top: 12%;
+}
+
+#myProjectsTitle {
+	margin: 0;
+}
+
+.modify-button {
+	display: inline-block;
+	font-size: 16px;
+	cursor: pointer;
+	font-family: Work Sans;
+	font-size: 14px;
+	border: none;
+}
+
+
+
+.hide {
+	display: none !important;
+}
+
+.show {
+	display: flex !important;
+}
+
+.hide {
+    display: none !important;
+}
+
+
+.show {
+    display: inline !important; 
 }

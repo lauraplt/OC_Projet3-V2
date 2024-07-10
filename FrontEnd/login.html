@@ -2,42 +2,40 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Connexion - Sophie Bluel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./assets/style.css">
-    <script src="./assets/scripts/main.js" defer></script>
-    <script src="./assets/scripts/login.js" defer></script>
-    <script src="./assets/scripts/modal.js" defer></script>
-    <script src="./assets/scripts/index.js" defer></script>
+    <script src="./assets/scripts/utils.js" defer></script>
+    <script src="./assets/scripts/security.js" defer></script>
+    <script src="./assets/scripts/works.js" defer></script> <!-- Ajout du script pour la gestion des travaux -->
 </head>
 <body>
-<header>
-    <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
-    <nav>
-        <ul>
-            <li><a href="index.html">projets</a></li>
-            <li><a href="contact.html">contact</a></li>
-            <li id="loginNav"><a href="login.html">login</a></li>
-            <li id="logoutNav" style="display:none;"><a href="#">logout</a></li>
-            <li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
-        </ul>
-    </nav>
-</header>
-<main class="container">
-    <section id="login">
-        <h2>Log in</h2>
-        <form id="loginForm">
-            <label for="username">E-mail</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Se connecter</button>
-        </form>
-        <a href="">Mot de passe oublié</a>
-    </section>
-</main>
+    <header>
+        <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+        <nav>
+            <ul>
+                <li><a href="main.html">Projets</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="loginNav" class="logged-out"><a href="login.html">Login</a></li>
+                <li id="logoutNav" class="logged-in" style="display: none;"><a href="#">Logout</a></li>
+                <li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="login" class="logged-out">
+            <h2>Log in</h2>
+            <form id="loginForm">
+                <label for="username">Email</label>
+                <input type="email" id="username" name="username" required>
+                <label for="password">Mot de passe</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Se connecter</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <!-- Pied de page -->
+    </footer>
 </body>
 </html>
