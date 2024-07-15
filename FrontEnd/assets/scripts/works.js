@@ -15,6 +15,8 @@ const addPhotoForm = document.querySelector("#addPhotoForm");
 const uploadForm = document.querySelector("#uploadForm");
 const backArrow = document.querySelector(".back-arrow");
 const modifyButton = document.querySelector(".modify-button");
+const imageInput = document.querySelector("#image");
+const imagePreview = document.querySelector("#imagePreview");
 
 // Array to store the works
 let works = [];
@@ -26,271 +28,320 @@ let works = [];
  * @param {Object} work -
  */
 function createWork(work) {
-  console.log("Creating work:", work);
+    console.log("Creating work:", work);
 
-  let el_img = document.createElement("img");
-  el_img.src = work.imageUrl;
-  el_img.alt = work.title;
+    let el_img = document.createElement("img");
+    el_img.src = work.imageUrl;
+    el_img.alt = work.title;
 
-  let el_title = document.createElement("figcaption");
-  el_title.textContent = work.title;
+    let el_title = document.createElement("figcaption");
+    el_title.textContent = work.title;
 
-  let el_item = document.createElement("figure");
-  el_item.classList.add("work-item");
-  el_item.appendChild(el_img);
-  el_item.appendChild(el_title);
+    let el_item = document.createElement("figure");
+    el_item.classList.add("work-item");
+    el_item.appendChild(el_img);
+    el_item.appendChild(el_title);
 
-  node_gallery.appendChild(el_item);
+    node_gallery.appendChild(el_item);
+}
+
+/**
+ * Creates and displays a work item in the modal gallery
+ * @param {Object} work -
+ */
+function createModalWork(work) {
+    console.log("Creating modal work:", work);
+
+    let el_img = document.createElement("img");
+    el_img.src = work.imageUrl;
+    el_img.alt = work.title;
+
+    let el_trash = document.createElement("span");
+    el_trash.innerHTML = "&#128465;"; // Unicode for trash can icon
+    el_trash.classList.add("trash-icon");
+    el_trash.addEventListener("click", () => deleteWork(work.id));
+
+    let el_item = document.createElement("div");
+    el_item.classList.add("modal-work-item");
+    el_item.appendChild(el_img);
+    el_item.appendChild(el_trash);
+
+    modalGallery.appendChild(el_item);
+}
+
+/**
+ * Deletes a work item by ID
+ * @param {number} workId -
+ */
+async function deleteWork(workId) {
+    const token = sessionStorage.getItem("token");
+    try {
+        const response = await fetch(`${url_works}/${workId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Erreur lors de la suppression de l'œuvre");
+        }
+
+        console.log("Œuvre supprimée:", workId);
+
+        // Find the index of the deleted work and remove it from the works array
+        const deletedWorkIndex = works.findIndex(work => work.id === workId);
+        if (deletedWorkIndex !== -1) {
+            works.splice(deletedWorkIndex, 1);
+        }
+
+        // Update gallery and modal after deletion
+        fetchWorks();
+        showModalWorks();
+    } catch (error) {
+        console.error("Erreur lors de la suppression de l'œuvre:", error);
+        alert("Erreur lors de la suppression de l'œuvre");
+    }
 }
 
 /**
  * Displays works filtered by category
- * @param {number} category - 
+ * @param {number} category -
  */
 function showWorks(category) {
-  console.log("Showing works for category:", category);
-  resetGallery();
+    console.log("Showing works for category:", category);
+    resetGallery();
 
-  if (category == 0) {
-    works.forEach((work) => createWork(work));
-  } else {
-    works.forEach((work) => {
-      if (work.categoryId == category) {
-        createWork(work);
-      }
-    });
-  }
+    if (category == 0) {
+        works.forEach((work) => createWork(work));
+    } else {
+        works.forEach((work) => {
+            if (work.categoryId == category) {
+                createWork(work);
+            }
+        });
+    }
 
-  resetActiveFilter(category);
+    resetActiveFilter(category);
 }
 
 /**
  * Resets the gallery by removing all child elements
  */
 function resetGallery() {
-  console.log("Resetting gallery");
-  node_gallery.innerHTML = "";
+    console.log("Resetting gallery");
+    node_gallery.innerHTML = "";
+}
+
+/**
+ * Opens the modal and shows the works
+ */
+function openModal() {
+    editModal.style.display = "block";
+    showModalWorks();
+}
+
+/**
+ * Shows the works in the modal
+ */
+function showModalWorks() {
+    console.log("Showing modal works");
+    modalGallery.innerHTML = "";
+
+    for (let i = 0; i < works.length; i++) {
+        createModalWork(works[i]);
+    }
+}
+
+/**
+ * Closes the modal
+ */
+function closeModal() {
+    editModal.style.display = "none";
 }
 
 // ------------------ Filters ----------------------------
 
 /**
  * Creates a filter button for a category
- * @param {Object} category - 
+ * @param {Object} category -
  */
 function createFilter(category) {
-  console.log("Creating filter:", category);
+    console.log("Creating filter:", category);
 
-  let el_filter = document.createElement("button");
-  el_filter.textContent = category.name;
-  el_filter.classList.add("filter-item");
-  el_filter.dataset.filter = category.id;
+    let el_filter = document.createElement("button");
+    el_filter.textContent = category.name;
+    el_filter.classList.add("filter-item");
+    el_filter.dataset.filter = category.id;
 
-  el_filter.addEventListener("click", applyFilter);
+    el_filter.addEventListener("click", applyFilter);
 
-  node_filters.append(el_filter);
+    node_filters.append(el_filter);
 }
 
 /**
  * Applies a filter based on the click event on a filter button
- * @param {Event} event - 
+ * @param {Event} event -
  */
 function applyFilter(event) {
-  const btn = event.target;
-  showWorks(parseInt(btn.dataset.filter));
+    const btn = event.target;
+    showWorks(parseInt(btn.dataset.filter));
 }
 
 /**
  * Resets the active filter state by adding an 'is-active' class to the selected filter button
- * @param {number} category - 
+ * @param {number} category -
  */
 function resetActiveFilter(category) {
-  document
-    .querySelectorAll(".filter-item")
-    .forEach((button) => button.classList.remove("is-active"));
-  document.querySelectorAll(".filter-item").forEach((button) => {
-    if (parseInt(button.dataset.filter) === category) {
-      button.classList.add("is-active");
-    }
-  });
+    document
+        .querySelectorAll(".filter-item")
+        .forEach((button) => button.classList.remove("is-active"));
+    document.querySelectorAll(".filter-item").forEach((button) => {
+        if (parseInt(button.dataset.filter) === category) {
+            button.classList.add("is-active");
+        }
+    });
 
-  // Conditionally add/remove classes to show/hide modifyButton based on login status
-  if (sessionStorage.getItem("token")) {
-    modifyButton.classList.remove("hide");
-    modifyButton.classList.add("show");
-  } else {
-    modifyButton.classList.remove("show");
-    modifyButton.classList.add("hide");
-  }
+    // Conditionally add/remove classes to show/hide modifyButton based on login status
+    if (sessionStorage.getItem("token")) {
+        modifyButton.classList.remove("hide");
+        modifyButton.classList.add("show");
+    } else {
+        modifyButton.classList.remove("show");
+        modifyButton.classList.add("hide");
+    }
+}
+
+/**
+ * Fetches categories and creates filter buttons
+ */
+async function fetchCategories() {
+    try {
+        const response = await fetch(url_categories);
+        const categories = await response.json();
+
+        console.log("Fetched categories:", categories);
+
+        // Create the "Tous" filter
+        createFilter({ id: 0, name: "Tous" });
+
+        // Create filters for each category
+        categories.forEach((category) => createFilter(category));
+
+        // Set the "Tous" filter as the default active filter
+        resetActiveFilter(0);
+    } catch (error) {
+        console.error("Error fetching categories:", error);
+    }
+}
+
+/**
+ * Fetches works and initializes the gallery
+ */
+async function fetchWorks() {
+    try {
+        const response = await fetch(url_works);
+        works = await response.json();
+
+        console.log("Fetched works:", works);
+
+        showWorks(0);
+    } catch (error) {
+        console.error("Error fetching works:", error);
+    }
 }
 
 // ------------------ Modal ----------------------------
 
-/**
- * Open the modal to show the edit gallery
- */
-function openModal() {
-  editModal.style.display = "block";
-  showModalGallery(); 
-}
-
-/**
- * Show the gallery section and hide the add photo form
- */
-function showGalleryInModal() {
-  modalGallery.style.display = "flex";
-  addPhotoForm.style.display = "none";
-  addPhotoBtn.style.display = "block";
-  backArrow.style.display = "none";
-  showModalGallery();
-}
-
-/**
- * Show the add photo form and hide the gallery section
- */
-function showAddPhotoForm() {
-  modalGallery.style.display = "none";
-  addPhotoForm.style.display = "block";
-  addPhotoBtn.style.display = "none";
-  backArrow.style.display = "block";
-}
-
-/**
- * Show the modal gallery with works (without titles)
- */
-async function showModalGallery() {
-  try {
-    const works = await httpGet(url_works);
-    modalGallery.innerHTML = "";
-    works.forEach((work) => {
-      let el_img = document.createElement("img");
-      el_img.src = work.imageUrl;
-      el_img.alt = work.title;
-
-      let el_deleteIcon = document.createElement("i");
-      el_deleteIcon.classList.add("fa", "fa-trash", "delete-icon");
-      el_deleteIcon.addEventListener("click", () => deleteWork(work.id));
-
-      let el_item = document.createElement("figure");
-      el_item.classList.add("work-item");
-      el_item.appendChild(el_img);
-      el_item.appendChild(el_deleteIcon);
-
-      modalGallery.appendChild(el_item);
-    });
-  } catch (error) {
-    console.error("Error fetching works:", error);
-    alert("Erreur lors du chargement de la galerie");
-  }
-}
-
-async function deleteWork(workId) {
-  const url_deleteWork = `${url_works}/${workId}`;
-  const token = sessionStorage.getItem("token");
-
-  try {
-    const response = await fetch(url_deleteWork, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Erreur lors de la suppression de l'œuvre");
-    }
-
-    // Remove the work from the local array
-    works = works.filter((work) => work.id !== workId);
-
-    const deletedItem = document.querySelector(
-      `.work-item[data-id="${workId}"]`
-    );
-    if (deletedItem) {
-      deletedItem.remove();
-    }
-  } catch (error) {
-    console.error("Erreur:", error);
-    alert("Erreur lors de la suppression de l'œuvre");
-  }
-}
-
-/**
- * Close the modal
- */
-function closeModal() {
-  editModal.style.display = "none";
-}
-
-closeModalBtn.addEventListener("click", closeModal);
-
-window.addEventListener("click", function (event) {
-  if (event.target === editModal) {
-    closeModal();
-  }
-});
-
-// Show the add photo form
-addPhotoBtn.addEventListener("click", showAddPhotoForm);
-
-// Submit the form
-uploadForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-
-  const formData = new FormData(uploadForm);
-  const url_addWork = url_works;
-  const token = sessionStorage.getItem("token");
-
-  fetch(url_addWork, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Erreur lors de l'ajout de la photo");
-      }
-      return response.json();
-    })
-    .then((newWork) => {
-      works.push(newWork);
-      showGalleryInModal(); // Refresh the gallery after adding a new work
-    })
-    .catch((error) => {
-      console.error("Erreur:", error);
-      alert("Erreur lors de l'ajout de la photo");
-    });
-});
-
-// Navigate back to the gallery when clicking the back arrow
-backArrow.addEventListener("click", showGalleryInModal);
-
-// Initialize modify button functionality
+// Open modal on "Modifier" button click
 modifyButton.addEventListener("click", openModal);
 
-// ------------------ Init ----------------------------
+// Close modal on close button click
+closeModalBtn.addEventListener("click", closeModal);
 
-/**
- * Function to initialize filters and display all works
- */
-(async function () {
-  const categories = await httpGet(url_categories);
-  console.log("Categories:", categories);
-  works = await httpGet(url_works);
-  console.log("Works:", works);
+// Close modal on clicking outside the modal content
+window.addEventListener("click", (event) => {
+    if (event.target === editModal) {
+        closeModal();
+    }
+});
 
-  // Display the "All" Filters Buttons
-  createFilter({ id: 0, name: "Tous" });
-  // Create a filter button for each category
-  categories.forEach((category) => createFilter(category));
+// Close modal on pressing the Escape key
+window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && editModal.style.display === "block") {
+        closeModal();
+    }
+});
 
-  // Display all Works and set "Tous" as active filter by default
-  showWorks(0);
-  resetActiveFilter(0);
+// Open add photo form on "Ajouter une photo" button click
+addPhotoBtn.addEventListener("click", () => {
+    modalGallery.style.display = "none";
+    addPhotoForm.style.display = "block";
+});
 
-  // Initialize login status check
-  checkLoginStatus();
-})();
+// Close add photo form and reset on back arrow click
+backArrow.addEventListener("click", () => {
+    addPhotoForm.style.display = "none";
+    modalGallery.style.display = "block";
+    uploadForm.reset();
+    imagePreview.innerHTML = "";
+});
 
+// Preview image on image input change
+imageInput.addEventListener("change", () => {
+    const file = imageInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.addEventListener("load", () => {
+            const imgElement = document.createElement("img");
+            imgElement.src = reader.result;
+            imgElement.alt = "Preview Image";
+            imgElement.classList.add("selected-image");
+
+            imagePreview.innerHTML = "";
+            imagePreview.appendChild(imgElement);
+        });
+
+        reader.readAsDataURL(file);
+    }
+});
+
+// Handle upload form submission
+uploadForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(uploadForm);
+    const token = sessionStorage.getItem("token");
+
+    try {
+        const response = await fetch(url_works, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error("Erreur lors de l'ajout de la photo");
+        }
+
+        const newWork = await response.json();
+        console.log("Nouvelle œuvre ajoutée:", newWork);
+
+        uploadForm.reset();
+        imagePreview.innerHTML = "";
+
+        closeModal();
+        fetchWorks();
+    } catch (error) {
+        console.error("Erreur lors de l'envoi de la photo:", error);
+        alert("Erreur lors de l'ajout de la photo");
+    }
+});
+
+// Initialization
+fetchCategories();
+fetchWorks();
