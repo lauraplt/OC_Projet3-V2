@@ -139,6 +139,8 @@ function resetGallery() {
 function openModal() {
     editModal.style.display = "block";
     showModalWorks();
+    addPhotoForm.style.display = "none";
+    addPhotoBtn.classList.remove("hidden");
 }
 
 /**
@@ -148,9 +150,16 @@ function showModalWorks() {
     console.log("Showing modal works");
     modalGallery.innerHTML = "";
 
+    // Add the title
+    let el_title = document.createElement("h2");
+    el_title.textContent = "Galerie Photo";
+    modalGallery.appendChild(el_title);
+
     for (let i = 0; i < works.length; i++) {
         createModalWork(works[i]);
     }
+
+    modalGallery.style.display = "block";
 }
 
 /**
@@ -246,6 +255,7 @@ async function fetchWorks() {
         console.log("Fetched works:", works);
 
         showWorks(0);
+        showModalWorks()
     } catch (error) {
         console.error("Error fetching works:", error);
     }
@@ -277,6 +287,7 @@ window.addEventListener("keydown", (event) => {
 addPhotoBtn.addEventListener("click", () => {
     modalGallery.style.display = "none";
     addPhotoForm.style.display = "block";
+    addPhotoBtn.classList.add("hidden");
 });
 
 // Close add photo form and reset on back arrow click
@@ -285,6 +296,7 @@ backArrow.addEventListener("click", () => {
     modalGallery.style.display = "block";
     uploadForm.reset();
     imagePreview.innerHTML = "";
+    addPhotoBtn.classList.remove("hidden");
 });
 
 // Preview image on image input change

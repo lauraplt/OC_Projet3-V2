@@ -440,35 +440,57 @@ footer nav ul {
 /* first modal*/
 
 .modal {
-	display: none;
 	position: fixed;
-	z-index: 1;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	background-color: rgb(0, 0, 0);
-	background-color: rgba(0, 0, 0, 0.4);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+	
 }
 
 
 .modal-content {
-	background-color: #fefefe;
-	margin: 15% auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 80%;
-	max-width: 600px;
-	border-radius: 4px;
+	width: 630px;
+    height: 688px;
+    overflow-y: auto;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+#editModal {
+	display: none; 
+    position: fixed;
+    z-index: 1000;
+    left: 50%; 
+    top: 50%; 
+    transform: translate(-50%, -50%); 
+    width: 80%; 
+    max-width: 620px;
+	max-height: 680px;
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 8px;
+
+}
 
 .close {
-	color: #aaa;
-	float: right;
-	font-size: 28px;
-	font-weight: bold;
+	position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .close:hover,
@@ -478,16 +500,18 @@ footer nav ul {
 	cursor: pointer;
 }
 
-
 #modalGallery {
-	border-bottom: 1px solid #b3b3b3;
-	margin-top: 50px;
-	margin-bottom: 10px;
-	padding-bottom: 30px;
-	display: flex;
-	flex-flow: row wrap;
-	gap: 11px;
-	width: 80%;
+margin-bottom: 20px;
+
+}
+
+#modalGallery h2, #addPhotoForm h2{
+	font-size: 26px;
+	font-family: Work Sans;
+	font-weight: 400;
+	color: #000000;
+	margin-bottom: 30px;
+	
 }
 
 #modalGallery .modal-work-item {
@@ -522,21 +546,29 @@ footer nav ul {
 
 
 #addPhotoBtn {
-	max-width: 260px;
-	margin-top: 40px;
-	margin-bottom: 50px;
-	padding-left: 40px;
-	padding-right: 40px;
-	height: auto;
-	min-height: 36px;
-	background-color: #1D6154;
-	color: #ffffff;
+	display: block;
+    height: 36px;
+    cursor: pointer;
+    max-width: 260px;
+    margin-top: 40px;
+    margin-bottom: 50px;
+    padding: 10px 20px;
+    background-color: #1D6154;
+    color: #ffffff;
+    border-radius: 50px;
+    text-align: center;
 }
 
 #addPhotoBtn:hover {
 	background-color: #145440;
 }
 
+#imagePreview img {
+	max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
 
 #uploadForm h2 {
 	margin-bottom: 20px;
@@ -578,6 +610,7 @@ footer nav ul {
 	justify-content: center;
 	position: relative;
 	margin-bottom: 20px;
+	overflow: hidden;
 }
 .upload-photo-box i{
 	color: #B9C5CC;
@@ -599,18 +632,12 @@ footer nav ul {
 
 
 #validate-button{
-	background: #a7a7a7;
-	border-radius: 60px;
-	font-family: "Syne";
-	font-style: normal;
-	font-weight: 700;
-	font-size: 14px;
-	line-height: 17px;
-	width: 237px;
-	height: 36px;
-	border: none;
-	color: #ffffff;
-	margin: 25px auto 0px;
+	border-top: 1px solid #b3b3b3;
+	margin-top: 47px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 #addPhotoForm button {
@@ -667,4 +694,8 @@ footer nav ul {
 
 .show {
     display: inline !important; 
+}
+
+.hidden {
+    display: none !important;
 }
