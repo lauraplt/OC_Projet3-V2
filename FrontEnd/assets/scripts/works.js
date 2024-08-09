@@ -7,25 +7,14 @@ const url_categories = "http://localhost:5678/api/categories";
 // DOM elements
 const node_filters = document.querySelector("#filters");
 const node_gallery = document.querySelector("#gallery");
-const editModal = document.querySelector("#editModal");
-const modalGallery = document.querySelector("#modalGallery");
-const closeModalBtn = document.querySelector(".close");
-const addPhotoBtn = document.querySelector("#addPhotoBtn");
-const addPhotoForm = document.querySelector("#addPhotoForm");
-const uploadForm = document.querySelector("#uploadForm");
-const backArrow = document.querySelector(".back-arrow");
 const modifyButton = document.querySelector(".modify-button");
-const imageInput = document.querySelector("#image");
-const imagePreview = document.querySelector("#imagePreview");
 
 // Array to store the works
 let works = [];
 
-// ------------------ Works ----------------------------
-
 /**
  * Creates and displays a work item in the gallery
- * @param {Object} work -
+ * @param {Object} work - 
  */
 function createWork(work) {
     console.log("Creating work:", work);
@@ -46,32 +35,8 @@ function createWork(work) {
 }
 
 /**
- * Creates and displays a work item in the modal gallery
- * @param {Object} work -
- */
-function createModalWork(work) {
-    console.log("Creating modal work:", work);
-
-    let el_img = document.createElement("img");
-    el_img.src = work.imageUrl;
-    el_img.alt = work.title;
-
-    let el_trash = document.createElement("span");
-    el_trash.innerHTML = "&#128465;"; // Unicode for trash can icon
-    el_trash.classList.add("trash-icon");
-    el_trash.addEventListener("click", () => deleteWork(work.id));
-
-    let el_item = document.createElement("div");
-    el_item.classList.add("modal-work-item");
-    el_item.appendChild(el_img);
-    el_item.appendChild(el_trash);
-
-    modalGallery.appendChild(el_item);
-}
-
-/**
  * Deletes a work item by ID
- * @param {number} workId -
+ * @param {number} workId - 
  */
 async function deleteWork(workId) {
     const token = sessionStorage.getItem("token");
@@ -97,7 +62,6 @@ async function deleteWork(workId) {
 
         // Update gallery and modal after deletion
         fetchWorks();
-        showModalWorks();
     } catch (error) {
         console.error("Erreur lors de la suppression de l'œuvre:", error);
         alert("Erreur lors de la suppression de l'œuvre");
@@ -106,17 +70,17 @@ async function deleteWork(workId) {
 
 /**
  * Displays works filtered by category
- * @param {number} category -
+ * @param {number} category - 
  */
 function showWorks(category) {
     console.log("Showing works for category:", category);
     resetGallery();
 
-    if (category == 0) {
+    if (category === 0) {
         works.forEach((work) => createWork(work));
     } else {
         works.forEach((work) => {
-            if (work.categoryId == category) {
+            if (work.categoryId === category) {
                 createWork(work);
             }
         });
@@ -134,72 +98,8 @@ function resetGallery() {
 }
 
 /**
- * Opens the modal and shows the works
- */
-function openModal() {
-    editModal.style.display = "block";
-    showModalWorks();
-    addPhotoForm.style.display = "none";
-    addPhotoBtn.classList.remove("hidden");
-}
-
-/**
- * Shows the works in the modal
- */
-function showModalWorks() {
-    console.log("Showing modal works");
-    modalGallery.innerHTML = "";
-
-    // Add the title
-    let el_title = document.createElement("h2");
-    el_title.textContent = "Galerie Photo";
-    modalGallery.appendChild(el_title);
-
-    for (let i = 0; i < works.length; i++) {
-        createModalWork(works[i]);
-    }
-
-    modalGallery.style.display = "block";
-}
-
-/**
- * Closes the modal
- */
-function closeModal() {
-    editModal.style.display = "none";
-}
-
-// ------------------ Filters ----------------------------
-
-/**
- * Creates a filter button for a category
- * @param {Object} category -
- */
-function createFilter(category) {
-    console.log("Creating filter:", category);
-
-    let el_filter = document.createElement("button");
-    el_filter.textContent = category.name;
-    el_filter.classList.add("filter-item");
-    el_filter.dataset.filter = category.id;
-
-    el_filter.addEventListener("click", applyFilter);
-
-    node_filters.append(el_filter);
-}
-
-/**
- * Applies a filter based on the click event on a filter button
- * @param {Event} event -
- */
-function applyFilter(event) {
-    const btn = event.target;
-    showWorks(parseInt(btn.dataset.filter));
-}
-
-/**
  * Resets the active filter state by adding an 'is-active' class to the selected filter button
- * @param {number} category -
+ * @param {number} category - 
  */
 function resetActiveFilter(category) {
     document
@@ -219,6 +119,32 @@ function resetActiveFilter(category) {
         modifyButton.classList.remove("show");
         modifyButton.classList.add("hide");
     }
+}
+
+/**
+ * Creates a filter button for a category
+ * @param {Object} category - 
+ */
+function createFilter(category) {
+    console.log("Creating filter:", category);
+
+    let el_filter = document.createElement("button");
+    el_filter.textContent = category.name;
+    el_filter.classList.add("filter-item");
+    el_filter.dataset.filter = category.id;
+
+    el_filter.addEventListener("click", applyFilter);
+
+    node_filters.append(el_filter);
+}
+
+/**
+ * Applies a filter based on the click event on a filter button
+ * @param {Event} event - 
+ */
+function applyFilter(event) {
+    const btn = event.target;
+    showWorks(parseInt(btn.dataset.filter));
 }
 
 /**
@@ -255,105 +181,74 @@ async function fetchWorks() {
         console.log("Fetched works:", works);
 
         showWorks(0);
-        showModalWorks()
     } catch (error) {
         console.error("Error fetching works:", error);
     }
 }
 
-// ------------------ Modal ----------------------------
-
-// Open modal on "Modifier" button click
-modifyButton.addEventListener("click", openModal);
-
-// Close modal on close button click
-closeModalBtn.addEventListener("click", closeModal);
-
-// Close modal on clicking outside the modal content
-window.addEventListener("click", (event) => {
-    if (event.target === editModal) {
-        closeModal();
+/**
+ * Opens the modal when the modify button is clicked
+ * @param {string} modalId - The ID of the modal to open
+ */
+function openModal(gallery) {
+    const modal = document.querySelector(`#${gallery}`);
+    if (modal) {
+        modal.style.display = 'block';
+    } else {
+        console.error("Modal element not found.");
     }
-});
-
-// Close modal on pressing the Escape key
-window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && editModal.style.display === "block") {
-        closeModal();
-    }
-});
-
-// Open add photo form on "Ajouter une photo" button click
-addPhotoBtn.addEventListener("click", () => {
-    modalGallery.style.display = "none";
-    addPhotoForm.style.display = "block";
-    addPhotoBtn.classList.add("hidden");
-});
-
-// Close add photo form and reset on back arrow click
-backArrow.addEventListener("click", () => {
-    addPhotoForm.style.display = "none";
-    modalGallery.style.display = "block";
-    uploadForm.reset();
-    imagePreview.innerHTML = "";
-    addPhotoBtn.classList.remove("hidden");
-});
-
-// Preview image on image input change
-imageInput.addEventListener("change", () => {
-    const file = imageInput.files[0];
-
-    if (file) {
-        const reader = new FileReader();
-
-        reader.addEventListener("load", () => {
-            const imgElement = document.createElement("img");
-            imgElement.src = reader.result;
-            imgElement.alt = "Preview Image";
-            imgElement.classList.add("selected-image");
-
-            imagePreview.innerHTML = "";
-            imagePreview.appendChild(imgElement);
-        });
-
-        reader.readAsDataURL(file);
-    }
-});
-
-// Handle upload form submission
-uploadForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData(uploadForm);
-    const token = sessionStorage.getItem("token");
-
-    try {
-        const response = await fetch(url_works, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            body: formData,
-        });
-
-        if (!response.ok) {
-            throw new Error("Erreur lors de l'ajout de la photo");
-        }
-
-        const newWork = await response.json();
-        console.log("Nouvelle œuvre ajoutée:", newWork);
-
-        uploadForm.reset();
-        imagePreview.innerHTML = "";
-
-        closeModal();
-        fetchWorks();
-    } catch (error) {
-        console.error("Erreur lors de l'envoi de la photo:", error);
-        alert("Erreur lors de l'ajout de la photo");
-    }
-});
+}
 
 // Initialization
 fetchCategories();
 fetchWorks();
+
+if (modifyButton) {
+    modifyButton.addEventListener("click", () => openModal(gallery)); // Remplacez 'modalId' par l'ID réel de votre modal
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupModalTriggers();
+    setupModifyButton();
+});
+
+function setupModifyButton() {
+    const modifyButton = document.querySelector('.modify-button');
+    if (modifyButton) {
+        // Vérifiez si un token est présent pour décider de l'affichage du bouton
+        if (sessionStorage.getItem("token")) {
+            modifyButton.style.display = 'block';
+        } else {
+            modifyButton.style.display = 'none';
+        }
+
+        modifyButton.addEventListener('click', event => {
+            event.preventDefault();
+            openModal(gallery);
+        });
+    } else {
+        console.error("Bouton de modification introuvable.");
+    }
+}
+
+function setupModalTriggers() {
+    const closeButtons = document.querySelectorAll('.modal .close');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal');
+            if (modal) {
+                modal.style.display = 'none'; // Cache la modale
+            }
+        });
+    });
+
+    // Optionnel : Cacher la modale en cliquant en dehors du contenu
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.addEventListener('click', event => {
+            if (event.target === modal) {
+                modal.style.display = 'none'; // Cache la modale si on clique en dehors du contenu
+            }
+        });
+    });
+}

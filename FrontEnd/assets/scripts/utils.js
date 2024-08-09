@@ -14,22 +14,28 @@ async function httpGet(url) {
 }
 
 // Call URL POST
-async function httpPost(url, data, headers) {
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(data)
-    });
-    const responseData = await response.json();
-    if (!response.ok) {
-      throw new Error(responseData.message || 'HTTP POST error');
+async function httpPost(url, data, headers = {}) 
+{
+    const isFormData = data instanceof FormData;
+    const options = {
+        method: 'POST',
+        headers: Object.assign(
+            {},
+            headers,
+            isFormData ? { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` } : { 'Content-Type': 'application/json' }
+        ),
+        body: isFormData ? data : JSON.stringify(data)
+    };
+
+    isFormData && delete options.headers['Content-Type'];
+
+    try {
+        const response = await fetch(url, options);
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        return null;
     }
-    return responseData;
-  } catch (e) {
-    console.error("HTTP POST error:", e);
-    throw e;
-  }
 }
 
 
@@ -52,3 +58,28 @@ function checkLoginStatus() {
 // Call checkLoginStatus on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", checkLoginStatus);
 
+/**
+ * Send a DELETE request
+ * @param {string} url - The URL to send the request to
+ * @param {Object} headers - Optional headers
+ * @returns {Promise<boolean>} - Success status
+ */
+async function httpDelete(url, headers={})
+{
+    headers = Object.assign(headers, { 
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+    });
+
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: headers
+        });
+        return response.ok;
+    }
+    catch (error) 
+    {
+        console.error(error);
+        return false;
+    }
+}

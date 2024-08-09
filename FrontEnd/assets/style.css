@@ -275,6 +275,17 @@ button {
 	color: #1D6154;
 }
 
+.header-container {
+	display: inline-flex;
+	padding: 20px;
+}
+
+.header-container h2 {
+	margin: 0;
+
+}
+
+
 button:hover,
 .is-active {
 	cursor: pointer;
@@ -437,265 +448,357 @@ footer nav ul {
 	text-align: center;
 }
 
-/* first modal*/
+/* Styles de base pour les modales */
+
+/******************* Modal *******************/
 
 .modal {
-	position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 999;
-    display: flex;
+    display: none;
+    position: fixed; 
     justify-content: center;
     align-items: center;
-	
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background:rgba(0, 0, 0, 0.30);
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+	justify-content: space-between;
+    align-items: center;
+    position: relative;
+    width: 630px;
+    height: 688px;
+    padding: 60px 105px 45px 105px;
+    background-color: white;
+    border-radius: 10px;
+    box-sizing: border-box;
 }
 
 
-.modal-content {
-	width: 630px;
-    height: 688px;
-    overflow-y: auto;
-    background: white;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+.icon-close {
+    position: absolute;
+    top: 26px;
+    right:30px;
+    font-size: 24px;
+    cursor: pointer;
+    color: black;
+}
+
+.icon-back {
+	position: absolute;
+    top: 26px;
+    left:30px;
+    font-size: 21px;
+    cursor: pointer;
+}
+
+.modal-header {
+	text-align: center;
+    font-size: 26px;
+    margin-top: 10px;
+    margin-bottom: 46px;
+}
+
+
+/******************* Modal Gallery *******************/
+
+.gallery-btn {
+	font-family: Syne;
+    color: white;
+    background-color: #1D6154;  
+    border: none; 
+    border-radius: 60px; 
+    padding: 10px 49px; 
+    margin-top: 38px;
+	cursor: pointer;
+    transition: background-color 0.6s, transform 0.6s;
+}
+
+.gallery-btn:hover {
+	background-color: #0E2F28;
+}
+
+.gallery-body { 
+    display: flex;
+    flex-wrap: wrap;
+    gap: 11px;
+    padding-bottom: 68px;
+    border-bottom: 1px solid lightgrey;
+}
+
+.fa-trash-can {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 11px;
+    border-radius: 3px;
+    padding: 4px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+.gallery-body article {
+    position: relative;
+}
+
+.gallery-body img {
+    width: 100%;
+    height: 100px;
+	margin-bottom: 15px;
+}
+
+.gallery-modal {
+    z-index: 2000;
+}
+
+
+/******************* Modal Add Photo *******************/
+
+.form-content {
+    width: 420px;
+	border-bottom: 1px solid lightgrey;
+}
+
+.form-add-photo {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-#editModal {
-	display: none; 
-    position: fixed;
-    z-index: 1000;
-    left: 50%; 
-    top: 50%; 
-    transform: translate(-50%, -50%); 
-    width: 80%; 
-    max-width: 620px;
-	max-height: 680px;
-    background-color: white;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    border-radius: 8px;
-
-}
-
-.close {
-	position: absolute;
-    top: 10px;
-    right: 20px;
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-	color: black;
-	text-decoration: none;
-	cursor: pointer;
-}
-
-#modalGallery {
-margin-bottom: 20px;
-
-}
-
-#modalGallery h2, #addPhotoForm h2{
-	font-size: 26px;
-	font-family: Work Sans;
-	font-weight: 400;
-	color: #000000;
-	margin-bottom: 30px;
-	
-}
-
-#modalGallery .modal-work-item {
-    position: relative;
-    width: 76.86px;
-    height: 102.57px;
-    opacity: 1;
-}
-
-#modalGallery .modal-work-item img {
+    background-color: #E8F1F6;
+    padding-bottom: 19px;
+    margin-bottom: 30px;
+    border-radius: 3px;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 4px;
+    height: 169px;
+    box-sizing: border-box;
 }
 
-.trash-icon {
-	position: absolute;
-	width: 15px;
-	height: 15px;
-	margin-left: -20px;
-	margin-top: 10px;
-	cursor: pointer;
-	font-size: 10px;
-	text-align: center;
-	color: #ffffff;
+.form-add-work {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.trash-icon:hover {
-	background-color: #333333;
+/** Submit Button **/
+
+#form-button-submit {
+    font-family: Syne;
+    color: white;
+    width: 237px;
+    border-radius: 60px;
+    padding: 10px 49px;
+    border: none;
+    background-color: #A7A7A7;
+    margin-top: 32px;
+    transition: background-color 0.6s, transform 0.6s;
 }
 
-
-#addPhotoBtn {
-	display: block;
-    height: 36px;
+#form-button-submit.active {
+    background-color:#1D6154;
     cursor: pointer;
-    max-width: 260px;
-    margin-top: 40px;
-    margin-bottom: 50px;
-    padding: 10px 20px;
-    background-color: #1D6154;
-    color: #ffffff;
+}
+
+#form-button-submit.active:hover {
+    background-color:#0E2F28;
+}
+
+/** Photo Form **/
+
+.form-button-add-photo {
+    color: #306685;
+    background-color: #CBD6DC;
+    padding: 10px 33px;
+    margin-bottom: 7px;
     border-radius: 50px;
-    text-align: center;
-}
-
-#addPhotoBtn:hover {
-	background-color: #145440;
-}
-
-#imagePreview img {
-	max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-}
-
-#uploadForm h2 {
-	margin-bottom: 20px;
-}
-#uploadForm {
-	width: 420px;
-	padding: 36px 0 30px 0;
-	display: flex;
-	flex-flow: column;
-}
-
-#uploadForm input[type="file"],
-#uploadForm input[type="text"],
-#uploadForm button {
-	background: #ffffff;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-	height: 51px;
-	border: none;
-	padding:  0 28px 0 16px;
-	font-family: 'Work Sans';
-	font-style: normal;
-	font-weight: 400;
-	font-size: 14px;
-	line-height: 16px;
-	color: #444444;
-	margin-top: 10px;
-}
-#image {
-	display: none;
-}
-
-.upload-photo-box{
-	background: #e8f1f7;
-	border-radius: 3px;
-	height: 180px;
-	display: flex;
-	flex-flow: column;
-	align-items: center;
-	justify-content: center;
-	position: relative;
-	margin-bottom: 20px;
-	overflow: hidden;
-}
-.upload-photo-box i{
-	color: #B9C5CC;
-	font-size: 4.7em;
-	margin-top: -10px;
-}
-
-.upload-photo-box p{
-	font-size: 12px;
-}
-
-.upload-photo-box img.selected-image {
-	max-width: 100%;
-	max-height: 100%;
-	object-fit: cover;
-	border-radius: 3px;
+    z-index: 1; 
+    cursor: pointer;
+    transition: background-color 0.6s, transform 0.6s;
   }
-  
+
+.form-button-add-photo:hover { 
+    background-color: #A7A7A7;
+    color: #FFF;
+  }
+
+.fa-image:before {
+    font-size: 76px;
+    color: #CBD6DC;
+}
+
+.fa-image { 
+    margin-top: 13px;
+    margin-bottom: 6px;
+}
+
+.form-work-photo {
+    display: none;
+}
+
+.trash-icon-preview {
+    top: 165px;
+    right: 120px;
+    font-size: 15px;
+}
+
+/** InuptTitle Form **/
+
+.form-title {
+    display: flex;
+    flex-direction: column;
+    color: #3D3D3D;
+    margin-bottom: 21px;
+    width: 100%;
+}
+
+.form-title-work { 
+    width: 100%;
+    height: 51px;
+    padding: 16px;
+    margin-top: 10px;
+    border: 2px solid #FFF;
+    color: #444;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+    box-sizing: border-box;
+}
+
+#input-title:focus {
+    border-color: #1D6154;
+    border-radius: 5px;
+    outline: none;
+}
+
+/** Category Form **/
+
+.form-categories {
+    position: relative;
+    width: 100%;
+    color: #3D3D3D;
+    margin-bottom: 47px;
+}
+
+.form-categories select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.form-categories .select-icon {
+    position: absolute;
+    top: 42px;
+    right: 30px;
+    pointer-events: none;
+    font-size: 16px;
+    color: #3D3D3D;
+}
+
+#categories {
+    width: 100%;
+    height: 51px;
+    margin-top: 10px;
+    padding: 16px 60px 16px 16px;
+    border: 2px solid #fff;
+    color: #444;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+    box-sizing: border-box;
+    background-color: white; 
+}
+
+#categories:focus {
+    background-color: white; 
+    border: 2px solid #1D6154; 
+    border-radius: 5px;
+    outline: none; 
+}
+
+/** Error message **/
+
+.error-message {
+    color: red;
+}
+
+.file-error-message {
+    color: red;
+    margin-top: 25px;
+}
+
+.form-title .error-message,
+.form-categories .error-message {
+    visibility: hidden;
+}
+
+.form-title .error-message.active,
+.form-categories .error-message.active {
+    visibility: visible;
+    color: red;
+    margin-top: 3px;
+    margin-bottom: -17px;
+}
 
 
-#validate-button{
-	border-top: 1px solid #b3b3b3;
-	margin-top: 47px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+/******************* Modal Confirma Delete Project *******************/
+
+.small-modal {
+	width: 400px;
+    height: 300px;
+    padding: 45px 30px 45px 30px;
+	z-index: 2001;
+    box-sizing: border-box;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.confirmation-modal {
+    z-index: 2001;
+}
+
+.confirmation-modal .modal-footer {
+	margin-top: 25px;
+}
+
+.modal-btn {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+	width: 120px;
+    color: white;
+    background-color: #1D6154;
+    border: none;
+    border-radius: 60px;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-btn:hover {
+    background-color: #0E2F28;
+}
+
+.cancel-btn {
+	background-color: #A7A7A7;
+}
+
+.cancel-btn:hover {
+	background: #0E2F28;
+}
+
+/******************* Modal Succes Project *******************/
+
+.success-modal .modal-content {
+    width: 300px;
+    height: 150px;
+	font-size: 16px;
+	font-weight: 900;
+	text-align: center;
 	justify-content: center;
 }
 
-#addPhotoForm button {
-	background-color: #1d6154;
-	color: white;
-	cursor: pointer;
-}
-
-#addPhotoForm button:hover {
-	background-color: #145440;
-}
-
-
-.back-arrow {
-	font-size: 24px;
-	cursor: pointer;
-	margin-bottom: 10px;
-	color: #1d6154;
-}
-
-.header-container {
-	display: flex;
-	justify-content: center; 
-	margin-top: 12%;
-}
-
-#myProjectsTitle {
-	margin: 0;
-}
-
-.modify-button {
-	display: inline-block;
-	font-size: 16px;
-	cursor: pointer;
-	font-family: Work Sans;
-	font-size: 14px;
-	border: none;
-}
-
-
-
-.hide {
-	display: none !important;
-}
-
-.show {
-	display: flex !important;
-}
-
-.hide {
-    display: none !important;
-}
-
-
-.show {
-    display: inline !important; 
-}
-
-.hidden {
-    display: none !important;
+.success-modal .icon-close {
+	top: 15px;
+    right: 15px;
+    font-size: 20px;
 }
