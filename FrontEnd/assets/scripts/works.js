@@ -195,7 +195,7 @@ function openModal(gallery) {
     if (modal) {
         modal.style.display = 'block';
     } else {
-        console.error("Modal element not found.");
+    
     }
 }
 
@@ -204,7 +204,7 @@ fetchCategories();
 fetchWorks();
 
 if (modifyButton) {
-    modifyButton.addEventListener("click", () => openModal(gallery)); // Remplacez 'modalId' par l'ID réel de votre modal
+    modifyButton.addEventListener("click", () => openModal(gallery)); 
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupModifyButton() {
     const modifyButton = document.querySelector('.modify-button');
     if (modifyButton) {
-        // Vérifiez si un token est présent pour décider de l'affichage du bouton
+        // check if token to display the CTA
         if (sessionStorage.getItem("token")) {
             modifyButton.style.display = 'block';
         } else {
@@ -237,17 +237,17 @@ function setupModalTriggers() {
         button.addEventListener('click', () => {
             const modal = button.closest('.modal');
             if (modal) {
-                modal.style.display = 'none'; // Cache la modale
+                modal.style.display = 'none'; 
             }
         });
     });
 
-    // Optionnel : Cacher la modale en cliquant en dehors du contenu
+    
     const modals = document.querySelectorAll('.modal');
     modals.forEach(modal => {
         modal.addEventListener('click', event => {
             if (event.target === modal) {
-                modal.style.display = 'none'; // Cache la modale si on clique en dehors du contenu
+                modal.style.display = 'none'; 
             }
         });
     });

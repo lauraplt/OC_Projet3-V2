@@ -243,13 +243,14 @@ footer nav {
 
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
+	margin-bottom: 1.5em;
 }
 
 #portfolio {
 	width: 100%;
 	max-width: 1140px; 
 	margin: 0 auto; 
+	margin-bottom: 50px;
 	text-align: center; 
 }
 
@@ -259,7 +260,7 @@ footer nav {
 	justify-content: center;
 	align-items: center;
 	gap: 10px;
-	padding: 50px;
+	padding-bottom: 50px;
 	margin: 0 auto;
 }
 
@@ -277,7 +278,7 @@ button {
 
 .header-container {
 	display: inline-flex;
-	padding: 20px;
+	padding-top: 80px;
 }
 
 .header-container h2 {
@@ -472,8 +473,7 @@ footer nav ul {
     align-items: center;
     position: relative;
     width: 630px;
-    height: 688px;
-    padding: 60px 105px 45px 105px;
+	padding: 60px 105px 45px 105px;
     background-color: white;
     border-radius: 10px;
     box-sizing: border-box;
@@ -504,6 +504,13 @@ footer nav ul {
     margin-bottom: 46px;
 }
 
+.modify-button {
+	border: none;
+	color: #000000;
+	font-family: work sans;
+	font-size: 14px;
+	margin-left: 15px;
+}
 
 /******************* Modal Gallery *******************/
 
