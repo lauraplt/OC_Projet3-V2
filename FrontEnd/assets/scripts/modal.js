@@ -180,7 +180,7 @@ async function confirmButtonClick(article) {
         }
         works = works.filter(work => work.id !== parseInt(workId));
         createAndDisplayWorks(works);
-        createWorks(works);
+        showWorks(works);
         showSuccessModal("Projet supprimé avec succès");
     } catch (error) {
         console.error('Erreur:', error);
@@ -662,25 +662,78 @@ function closeSuccessModal()
 
 /**
  * Open the modal
- * @param {HTMLElement} modal - The modal element to open
+ * @param {string|HTMLElement} modalOrSelector - The modal element or its selector
  * @returns void
  */
-function openModal(modal) 
+function openModal(modalOrSelector) 
 {
-    modal.classList.add('modal-open');
-    document.body.style.overflow = 'hidden'; 
+    let modal = getModalElement(modalOrSelector);
+    
+    if (modal) {
+        modal.classList.add('modal-open');
+        modal.setAttribute('aria-hidden', 'false');
+        modal.setAttribute('tabindex', '-1');
+        modal.focus();
+        document.body.style.overflow = 'hidden';
+        
+        // Animation d'ouverture
+        setTimeout(() => modal.classList.add('show'), 10);
+    } else {
+        console.error('Modal not found');
+    }
 }
 
 /**
  * Close the modal
- * @param {HTMLElement} modal - The modal element to close
+ * @param {string|HTMLElement} modalOrSelector - The modal element or its selector
  * @returns void
  */
-function closeModal(modal) 
+function closeModal(modalOrSelector) 
 {
-    modal.classList.remove('modal-open');
-    document.body.style.overflow = ''; // Rétablit le défilement du body
+    let modal = getModalElement(modalOrSelector);
+    
+    if (modal) {
+        modal.classList.remove('show');
+        modal.setAttribute('aria-hidden', 'true');
+        
+        // Attendre la fin de l'animation avant de cacher complètement
+        setTimeout(() => {
+            modal.classList.remove('modal-open');
+            document.body.style.overflow = '';
+        }, 300); // Correspond à la durée de la transition CSS
+    } else {
+        console.error('Modal not found');
+    }
 }
+
+/**
+ * Helper function to get modal element
+ * @param {string|HTMLElement} modalOrSelector - The modal element or its selector
+ * @returns {HTMLElement|null}
+ */
+function getModalElement(modalOrSelector) 
+{
+    if (typeof modalOrSelector === 'string') {
+        return document.querySelector(modalOrSelector);
+    } else if (modalOrSelector instanceof HTMLElement) {
+        return modalOrSelector;
+    }
+    return null;
+}
+
+// Event listeners
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal')) {
+        closeModal(event.target);
+    }
+});
+
+// Assuming you have close buttons with class 'close-modal'
+document.querySelectorAll('.close-modal').forEach(button => {
+    button.addEventListener('click', function() {
+        closeModal(this.closest('.modal'));
+    });
+});
 
 /**
  * Close the modal when clicking outside of it
