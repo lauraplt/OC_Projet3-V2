@@ -466,6 +466,7 @@ footer nav ul {
     background:rgba(0, 0, 0, 0.30);
 }
 
+
 .modal-content {
     display: flex;
     flex-direction: column;
@@ -510,6 +511,10 @@ footer nav ul {
 	font-family: work sans;
 	font-size: 14px;
 	margin-left: 15px;
+}
+
+.modal.modal-open {
+	display: flex;
 }
 
 /******************* Modal Gallery *******************/

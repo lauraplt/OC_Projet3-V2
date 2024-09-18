@@ -17,8 +17,6 @@ let works = [];
  * @param {Object} work - 
  */
 function createWork(work) {
-    console.log("Creating work:", work);
-
     let el_img = document.createElement("img");
     el_img.src = work.imageUrl;
     el_img.alt = work.title;
@@ -52,13 +50,8 @@ async function deleteWork(workId) {
             throw new Error("Erreur lors de la suppression de l'œuvre");
         }
 
-        console.log("Œuvre supprimée:", workId);
-
-        // Find the index of the deleted work and remove it from the works array
-        const deletedWorkIndex = works.findIndex(work => work.id === workId);
-        if (deletedWorkIndex !== -1) {
-            works.splice(deletedWorkIndex, 1);
-        }
+        // Filter out the deleted work from the works array
+        works = works.filter(work => work.id !== workId);
 
         // Update gallery and modal after deletion
         fetchWorks();
@@ -73,7 +66,6 @@ async function deleteWork(workId) {
  * @param {number} category - 
  */
 function showWorks(category) {
-    console.log("Showing works for category:", category);
     resetGallery();
 
     if (category === 0) {
@@ -93,7 +85,6 @@ function showWorks(category) {
  * Resets the gallery by removing all child elements
  */
 function resetGallery() {
-    console.log("Resetting gallery");
     node_gallery.innerHTML = "";
 }
 
@@ -126,8 +117,6 @@ function resetActiveFilter(category) {
  * @param {Object} category - 
  */
 function createFilter(category) {
-    console.log("Creating filter:", category);
-
     let el_filter = document.createElement("button");
     el_filter.textContent = category.name;
     el_filter.classList.add("filter-item");
@@ -155,8 +144,6 @@ async function fetchCategories() {
         const response = await fetch(url_categories);
         const categories = await response.json();
 
-        console.log("Fetched categories:", categories);
-
         // Create the "Tous" filter
         createFilter({ id: 0, name: "Tous" });
 
@@ -178,8 +165,6 @@ async function fetchWorks() {
         const response = await fetch(url_works);
         works = await response.json();
 
-        console.log("Fetched works:", works);
-
         showWorks(0);
     } catch (error) {
         console.error("Error fetching works:", error);
@@ -194,8 +179,6 @@ function openModal(gallery) {
     const modal = document.querySelector(`#${gallery}`);
     if (modal) {
         modal.style.display = 'block';
-    } else {
-    
     }
 }
 
@@ -242,7 +225,6 @@ function setupModalTriggers() {
         });
     });
 
-    
     const modals = document.querySelectorAll('.modal');
     modals.forEach(modal => {
         modal.addEventListener('click', event => {

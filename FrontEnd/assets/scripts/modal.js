@@ -161,17 +161,32 @@ function showConfirmModal(article)
 /**
  * Handle confirm button click for deleting a project
  * @param {HTMLElement} article - The article element representing the project
- * @returns void
+ * @returns {Promise<void>}
  */
-async function confirmButtonClick(article) 
-{
+async function confirmButtonClick(article) {
     closeModal('.confirmation-modal');
     let workId = article.getAttribute('data-work-id');
 
-    let success = await httpDelete(`${works_url}/${workId}`);
-        success && (works = await fetchWorks(), createAndDisplayWorks(works), createWorks(works), showSuccessModal("Projet supprimé avec succès"));
-}
+    try {
+        const response = await fetch(`${works_url}/${workId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
 
+        if (!response.ok) {
+            throw new Error('Erreur lors de la suppression du projet');
+        }
+        works = works.filter(work => work.id !== parseInt(workId));
+        createAndDisplayWorks(works);
+        createWorks(works);
+        showSuccessModal("Projet supprimé avec succès");
+    } catch (error) {
+        console.error('Erreur:', error);
+        showErrorModal("Une erreur est survenue lors de la suppression du projet");
+    }
+}
 
 /**
  * Show the modal to add a photo
@@ -513,8 +528,7 @@ function resetForm()
  */
 async function refreshGalleries() 
 {
-    works = await fetchWorks();
-    createWorks(works);
+    showWorks(0);
 }
 
 /**
@@ -653,18 +667,19 @@ function closeSuccessModal()
  */
 function openModal(modal) 
 {
-    modal.style.display = 'flex';
+    modal.classList.add('modal-open');
+    document.body.style.overflow = 'hidden'; 
 }
 
 /**
  * Close the modal
- * @param {string} [modalSelector='.modal'] - The selector for the modal to close
+ * @param {HTMLElement} modal - The modal element to close
  * @returns void
  */
-function closeModal(modalSelector = '.modal') 
+function closeModal(modal) 
 {
-    let modal = document.querySelector(modalSelector);
-        modal && (modal.style.display = 'none', modal.innerHTML = '');
+    modal.classList.remove('modal-open');
+    document.body.style.overflow = ''; // Rétablit le défilement du body
 }
 
 /**
