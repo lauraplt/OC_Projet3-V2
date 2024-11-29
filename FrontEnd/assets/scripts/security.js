@@ -58,43 +58,48 @@ function handleLogout() {
 function checkLoginStatus() {
     const loginNav = document.querySelector("#loginNav");
     const logoutNav = document.querySelector("#logoutNav");
-    const editionMode = document.querySelector("#editionMode");
+    const editionMode = document.querySelector(".editionMode");
     const modifyButton = document.querySelector(".modify-button");
     const node_filters = document.querySelector("#filters");
     const token = sessionStorage.getItem("token");
 
-    if (loginNav && logoutNav && modifyButton && node_filters) {
+    if (loginNav && logoutNav && modifyButton && node_filters && editionMode) {
         if (token) {
-            // Si l'utilisateur est connecté, masquer les filtres
-            loginNav.style.display = "none";
-            logoutNav.style.display = "inline";
-            modifyButton.style.display = "inline";
-            editionMode.style.display = "block";  // Afficher la barre Mode édition
-            node_filters.style.display = "none";  // Masquer les filtres
+            // Si l'utilisateur est connecté
+            loginNav.style.display = "none";   
+            logoutNav.style.display = "inline"; 
+            modifyButton.style.display = "inline"; 
+            editionMode.classList.add("show");   
+            node_filters.style.display = "none";  
         } else {
-            // Si l'utilisateur n'est pas connecté, afficher les filtres
-            loginNav.style.display = "inline";
-            logoutNav.style.display = "none";
-            modifyButton.style.display = "none";
-            editionMode.style.display = "none";  // Masquer la barre Mode édition
-            node_filters.style.display = "block";  // Afficher les filtres
+            // Si l'utilisateur n'est pas connecté
+            loginNav.style.display = "inline";   
+            logoutNav.style.display = "none";   
+            modifyButton.style.display = "none"; 
+            editionMode.classList.remove("show");   
+            node_filters.style.display = "block"; 
         }
     }
 }
 
 // Appeler checkLoginStatus au chargement du DOM
 document.addEventListener("DOMContentLoaded", () => {
+    // Suppression du code redondant pour gérer l'édition mode
+    // La vérification se fait maintenant uniquement dans checkLoginStatus()
+  
     const loginForm = document.querySelector("#loginForm");
-    const loginNav = document.querySelector("#loginNav");
     const logoutNav = document.querySelector("#logoutNav");
+  
+    // Vérification du statut de connexion
+    checkLoginStatus();
 
+    // Gestion du formulaire de connexion
     if (loginForm) {
         loginForm.addEventListener("submit", handleLogin);
     }
 
+    // Gestion de la déconnexion
     if (logoutNav) {
         logoutNav.addEventListener("click", handleLogout);
     }
-
-    checkLoginStatus();
 });

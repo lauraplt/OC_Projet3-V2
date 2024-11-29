@@ -818,26 +818,36 @@ footer nav ul {
 
 .editionMode {
 
-	margin: 0 !important;
-	padding: 0;
-	height: 40px;
-	background-color: #000000;
-	color: #ffffff;
-	display: flex !important;
-	justify-content: center;
-	align-items: center;
-	font-style: normal;
-	font-weight: 400;
-	font-size: 16px;
-	line-height: 19px;
-	text-align: center;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	box-sizing: border-box;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 1000;
+		margin: 0 !important;
+		padding: 0;
+		height: 40px;
+		background-color: #000000;
+		color: #ffffff;
+		justify-content: center;
+		align-items: center;
+		font-style: normal;
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 19px;
+		text-align: center;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		box-sizing: border-box;
+		display: none;
+	}
+	
   
+
+
+
+.editionMode.show {
+	display: flex !important; /* S'affiche uniquement quand la classe 'show' est ajoutée */
 }
-
-
 
 .editionMode i {
 	margin-right: 10px;

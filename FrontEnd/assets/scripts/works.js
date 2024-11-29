@@ -32,7 +32,6 @@ function createWork(work) {
     node_gallery.appendChild(el_item);
 }
 
-
 /**
  * Displays works filtered by category
  * @param {number} category - 
@@ -74,14 +73,7 @@ function resetActiveFilter(category) {
         }
     });
 
-    // Conditionally add/remove classes to show/hide modifyButton based on login status
-    if (sessionStorage.getItem("token")) {
-        modifyButton.classList.remove("hide");
-        modifyButton.classList.add("show");
-    } else {
-        modifyButton.classList.remove("show");
-        modifyButton.classList.add("hide");
-    }
+   
 }
 
 /**
@@ -207,15 +199,5 @@ function setupModalTriggers() {
     });
 }
 
-function enableEditMode() {
-    // Vérifier si l'utilisateur est connecté avant d'activer le mode édition
-    const token = sessionStorage.getItem("token");
-    if (token) {
-        // Activer les options de modification, par exemple en affichant un bouton de modification
-        const modifyButton = document.querySelector(".modify-button");
-        modifyButton.style.display = "inline";  // Afficher le bouton de modification
-    }}
 
-    document.addEventListener('DOMContentLoaded', () => {
-        enableEditMode();
-    });
+
