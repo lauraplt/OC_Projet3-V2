@@ -14,33 +14,33 @@ async function httpGet(url) {
 
 // Call URL POST
 async function httpPost(url, data, headers = {}) {
-    const isFormData = data instanceof FormData;
-    const options = {
-        method: 'POST',
-        headers: Object.assign(
-            {},
-            headers,
-            isFormData ? { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` } : { 'Content-Type': 'application/json' }
-        ),
-        body: isFormData ? data : JSON.stringify(data)
-    };
+  const isFormData = data instanceof FormData;
+  const options = {
+      method: 'POST',
+      headers: Object.assign(
+          {},
+          headers,
+          isFormData ? {} : { 'Content-Type': 'application/json' }
+      ),
+      body: isFormData ? data : JSON.stringify(data)
+  };
 
-    isFormData && delete options.headers['Content-Type'];
+  isFormData && delete options.headers['Content-Type'];
 
-    try {
-        const response = await fetch(url, options);
+  try {
+      const response = await fetch(url, options);
 
-        if (!response.ok) {
-            // Si la réponse n'est pas OK, lancer une exception
-            throw new Error(`Erreur: ${response.statusText}`);
-        }
+      if (!response.ok) {
+          // If response is not OK, throw an exception
+          throw new Error(`Error: ${response.statusText}`);
+      }
 
-        const responseData = await response.json();
-        return responseData;
-    } catch (error) {
-        console.error("Erreur lors de la requête POST", error);
-        throw error; // Rejeter l'erreur pour qu'elle soit gérée dans la fonction appelante
-    }
+      const responseData = await response.json();
+      return responseData;
+  } catch (error) {
+      console.error("Error during POST request", error);
+      throw error; // Reject the error to be handled in the calling function
+  }
 }
 
 // Utility function to check login status
