@@ -64,24 +64,27 @@ function modalGallery()
  * @param {Array} works - List of works to display
  * @returns void
  */
-function createAndDisplayWorks(works) 
-{
+function createAndDisplayWorks(works) {
+    // Reset the gallery (clear it out)
     resetWorksModalGallery();
 
+    // Add each work to the gallery
     works.forEach(work => {
         let img = document.createElement('img');
-            img.src = work.imageUrl;
+        img.src = work.imageUrl;
 
         let article = document.createElement('article');
-            article.setAttribute('data-work-id', work.id);
-            article.appendChild(img);
-        
-        let galleryBody = document.querySelector('.gallery-body');
-            galleryBody.appendChild(article);
+        article.setAttribute('data-work-id', work.id);
+        article.appendChild(img);
 
+        let galleryBody = document.querySelector('.gallery-body');
+        galleryBody.appendChild(article);
+
+        // Add a trash icon to each article
         addTrashIcon(article);
     });
 }
+
 
 /**
  * Fetch works from the API
@@ -165,7 +168,7 @@ function showConfirmModal(article)
  */
 async function confirmButtonClick(article) {
     closeModal('.confirmation-modal');
-    let workId = article.getAttribute('data-work-id');
+    const workId = article.getAttribute('data-work-id');
 
     try {
         const response = await fetch(`${works_url}/${workId}`, {
@@ -178,9 +181,14 @@ async function confirmButtonClick(article) {
         if (!response.ok) {
             throw new Error('Erreur lors de la suppression du projet');
         }
-        works = works.filter(work => work.id !== parseInt(workId));
-        createAndDisplayWorks(works);
-        showWorks(works);
+     
+        article.remove(); 
+        
+        const updatedWorks = await fetchWorks(); 
+
+        resetGallery();  
+        updatedWorks.forEach(work => createWork(work));
+
         showSuccessModal("Projet supprimé avec succès");
     } catch (error) {
         console.error('Erreur:', error);

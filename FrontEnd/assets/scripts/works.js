@@ -32,34 +32,6 @@ function createWork(work) {
     node_gallery.appendChild(el_item);
 }
 
-/**
- * Deletes a work item by ID
- * @param {number} workId - 
- */
-async function deleteWork(workId) {
-    const token = sessionStorage.getItem("token");
-    try {
-        const response = await fetch(`${url_works}/${workId}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (!response.ok) {
-            throw new Error("Erreur lors de la suppression de l'œuvre");
-        }
-
-        // Filter out the deleted work from the works array
-        works = works.filter(work => work.id !== workId);
-
-        // Update gallery and modal after deletion
-        fetchWorks();
-    } catch (error) {
-        console.error("Erreur lors de la suppression de l'œuvre:", error);
-        alert("Erreur lors de la suppression de l'œuvre");
-    }
-}
 
 /**
  * Displays works filtered by category

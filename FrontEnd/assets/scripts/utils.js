@@ -58,28 +58,3 @@ function checkLoginStatus() {
 // Call checkLoginStatus on DOMContentLoaded
 document.addEventListener("DOMContentLoaded", checkLoginStatus);
 
-/**
- * Send a DELETE request
- * @param {string} url - The URL to send the request to
- * @param {Object} headers - Optional headers
- * @returns {Promise<boolean>} - Success status
- */
-async function httpDelete(url, headers={})
-{
-    headers = Object.assign(headers, { 
-        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-    });
-
-    try {
-        const response = await fetch(url, {
-            method: 'DELETE',
-            headers: headers
-        });
-        return response.ok;
-    }
-    catch (error) 
-    {
-        console.error(error);
-        return false;
-    }
-}
