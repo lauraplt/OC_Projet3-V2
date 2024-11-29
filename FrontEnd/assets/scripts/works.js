@@ -206,3 +206,16 @@ function setupModalTriggers() {
         });
     });
 }
+
+function enableEditMode() {
+    // Vérifier si l'utilisateur est connecté avant d'activer le mode édition
+    const token = sessionStorage.getItem("token");
+    if (token) {
+        // Activer les options de modification, par exemple en affichant un bouton de modification
+        const modifyButton = document.querySelector(".modify-button");
+        modifyButton.style.display = "inline";  // Afficher le bouton de modification
+    }}
+
+    document.addEventListener('DOMContentLoaded', () => {
+        enableEditMode();
+    });

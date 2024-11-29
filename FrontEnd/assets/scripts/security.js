@@ -15,19 +15,26 @@ async function handleLogin(event) {
     const password = formData.get("password");
 
     try {
+        // Envoi des données au backend pour validation
         const data = await httpPost(url_login, { email: username, password: password }, { "Content-Type": "application/json" });
 
-        // Assuming the token is returned in the response
-        sessionStorage.setItem("token", data.token);
+        // Vérification si le backend retourne une erreur (e.g. utilisateur non trouvé, mot de passe incorrect)
+        if (data && data.token) {
+            // Si un token est retourné, on l'enregistre et on redirige
+            sessionStorage.setItem("token", data.token);
 
-        // Display logout link and hide login link
-        document.querySelector("#loginNav").classList.add("hide");
-        document.querySelector("#logoutNav").classList.remove("hide");
+            // Affichage des liens de déconnexion et masquage de la connexion
+            document.querySelector("#loginNav").classList.add("hide");
+            document.querySelector("#logoutNav").classList.remove("hide");
 
-        // Redirect to the homepage
-        window.location.href = "index.html";
+            // Redirection vers la page d'accueil
+            window.location.href = "index.html";
+        } else {
+            // Si aucun token n'est renvoyé, l'authentification a échoué
+            alert("Nom d'utilisateur ou mot de passe incorrect.");
+        }
     } catch (error) {
-        alert(`Error: ${error.message}`);
+        alert(`Erreur: ${error.message}`);
     }
 }
 
@@ -37,15 +44,45 @@ async function handleLogin(event) {
 function handleLogout() {
     sessionStorage.removeItem("token");
 
-    // Display login link and hide logout link
+    // Affichage du lien de connexion et masquage du lien de déconnexion
     document.querySelector("#loginNav").classList.remove("hide");
     document.querySelector("#logoutNav").classList.add("hide");
 
-    // Refresh the page to apply changes
+    // Rafraîchissement de la page pour appliquer les changements
     window.location.reload();
 }
 
-// Add event listeners
+/**
+ * Checks the login status of the user and updates the UI elements accordingly.
+ */
+function checkLoginStatus() {
+    const loginNav = document.querySelector("#loginNav");
+    const logoutNav = document.querySelector("#logoutNav");
+    const editionMode = document.querySelector("#editionMode");
+    const modifyButton = document.querySelector(".modify-button");
+    const node_filters = document.querySelector("#filters");
+    const token = sessionStorage.getItem("token");
+
+    if (loginNav && logoutNav && modifyButton && node_filters) {
+        if (token) {
+            // Si l'utilisateur est connecté, masquer les filtres
+            loginNav.style.display = "none";
+            logoutNav.style.display = "inline";
+            modifyButton.style.display = "inline";
+            editionMode.style.display = "block";  // Afficher la barre Mode édition
+            node_filters.style.display = "none";  // Masquer les filtres
+        } else {
+            // Si l'utilisateur n'est pas connecté, afficher les filtres
+            loginNav.style.display = "inline";
+            logoutNav.style.display = "none";
+            modifyButton.style.display = "none";
+            editionMode.style.display = "none";  // Masquer la barre Mode édition
+            node_filters.style.display = "block";  // Afficher les filtres
+        }
+    }
+}
+
+// Appeler checkLoginStatus au chargement du DOM
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.querySelector("#loginForm");
     const loginNav = document.querySelector("#loginNav");
@@ -61,33 +98,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
     checkLoginStatus();
 });
-
-/**
- * Checks the login status of the user and updates the UI elements accordingly.
- */
-function checkLoginStatus() {
-    const loginNav = document.querySelector("#loginNav");
-    const logoutNav = document.querySelector("#logoutNav");
-    const modifyButton = document.querySelector(".modify-button");
-    const node_filters = document.querySelector("#filters");
-    const token = sessionStorage.getItem("token");
-
-    if (loginNav && logoutNav && modifyButton && node_filters) {
-        if (token) {
-            loginNav.style.display = "none";
-            logoutNav.style.display = "inline";
-            modifyButton.style.display = "inline";
-            node_filters.style.display = "none";
-        } else {
-            loginNav.style.display = "inline";
-            logoutNav.style.display = "none";
-            modifyButton.style.display = "none";
-            node_filters.style.display = "";
-        }
-    } else {
-    
-    }
-}
-
-// Call checkLoginStatus on DOMContentLoaded
-document.addEventListener("DOMContentLoaded", checkLoginStatus);
