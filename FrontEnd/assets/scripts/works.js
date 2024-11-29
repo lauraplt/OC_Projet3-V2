@@ -200,4 +200,18 @@ function setupModalTriggers() {
 }
 
 
+async function addWork(workData) {
+    if (!sessionStorage.getItem("token")) {
+        alert("Vous devez être connecté pour ajouter un travail.");
+        return;
+    }
 
+    try {
+        const newWork = await httpPost(url_works, workData);
+        works.push(newWork); // Ajouter le travail à la liste locale
+        createWork(newWork); // Mettre à jour la galerie
+    } catch (error) {
+        console.error("Erreur lors de l'ajout du travail :", error);
+        alert("Une erreur s'est produite lors de l'ajout du travail.");
+    }
+}

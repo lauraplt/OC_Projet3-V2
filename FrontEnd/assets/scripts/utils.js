@@ -12,26 +12,39 @@ async function httpGet(url) {
     }
 }
 
+
+
 // Call URL POST
-async function httpPost(url, data, headers = {}) {
+async function httpPost(url, data, headers = {}, requiresAuth = true) {
   const isFormData = data instanceof FormData;
+  const token = sessionStorage.getItem("token");
+
   const options = {
       method: 'POST',
       headers: Object.assign(
           {},
           headers,
-          isFormData ? {} : { 'Content-Type': 'application/json' }
+          isFormData ? {} : { 'Content-Type': 'application/json' },
+          (requiresAuth && token) ? { 'Authorization': `Bearer ${token}` } : {}
       ),
       body: isFormData ? data : JSON.stringify(data)
   };
 
-  isFormData && delete options.headers['Content-Type'];
+  if (isFormData) {
+      delete options.headers['Content-Type'];
+  }
 
   try {
       const response = await fetch(url, options);
 
+      if (requiresAuth && response.status === 401) {
+          console.error("Unauthorized: Login required.");
+          sessionStorage.removeItem("token");
+          checkLoginStatus();
+          throw new Error("Unauthorized - Token invalid or expired");
+      }
+
       if (!response.ok) {
-          // If response is not OK, throw an exception
           throw new Error(`Error: ${response.statusText}`);
       }
 
@@ -39,9 +52,10 @@ async function httpPost(url, data, headers = {}) {
       return responseData;
   } catch (error) {
       console.error("Error during POST request", error);
-      throw error; // Reject the error to be handled in the calling function
+      throw error;
   }
 }
+
 
 // Utility function to check login status
 function checkLoginStatus() {
@@ -55,6 +69,11 @@ function checkLoginStatus() {
     } else {
         loginNav.style.display = "inline";
         logoutNav.style.display = "none";
+    }
+    
+    const modifyButton = document.querySelector('.modify-button');
+    if (modifyButton) {
+        modifyButton.style.display = token ? 'block' : 'none';
     }
 }
 
