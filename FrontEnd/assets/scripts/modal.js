@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
 /**
  * Create and display the photo gallery modal
  */
-function modalGallery() 
+async function modalGallery() 
 {
     let btn = document.createElement('button');
         btn.textContent = "Ajouter une photo";
@@ -56,7 +56,9 @@ function modalGallery()
         footer: btn
     }, '.gallery-modal');
 
-    createAndDisplayWorks(works);
+    // Fetch works dynamically each time modal is opened
+    const updatedWorks = await fetchWorks();
+    createAndDisplayWorks(updatedWorks);
 }
 
 /**
@@ -534,10 +536,12 @@ function resetForm()
 /**
  * Refresh galleries after adding a project
  */
-async function refreshGalleries() 
-{
+async function refreshGalleries() {
+    works = await fetchWorks(); // Recharger la liste complète depuis l’API
     showWorks(0);
 }
+
+
 
 /**
  * Check the validity of the form
